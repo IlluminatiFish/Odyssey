@@ -59,7 +59,7 @@ All you have to do, to use this script is run the ``start.py`` script and enter 
 
 To have the RedirectExplorer to work properly without any hiccups, please follow the instructions below.
 
-- Download each module from this repository (contentparser.py, utils.py and start.py)
+- Download each module from this repository (``contentparser.py``, ``utils.py`` and ``start.py``)
 - Make sure each module is in the **same directory level** 
 - After you have setup the modules, you will have to install each module used in this project by doing the following
 
