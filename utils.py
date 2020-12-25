@@ -1,4 +1,4 @@
-import re, requests
+import requests
 
 
 def getData(ip, type):
@@ -64,14 +64,3 @@ def getValue(key, request_data):
         return dictionarize(request_data)[key]
     except KeyError:
         return
-
-def findURLs(data):
-    '''
-        @:purpose: Find all URLs in a string, @param data
-
-        @:param data: The string you want to check for URLs in
-
-        @:returns regex.findall(data): The list of URLs matched with the regex pattern within the @param data
-    '''
-    regex = re.compile('http[s]?://(?:[\w]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', re.UNICODE)
-    return regex.findall(data)
