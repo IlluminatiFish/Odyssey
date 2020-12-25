@@ -52,7 +52,7 @@ You will also be required to install some Python modules from [here](https://pyp
 
 All you have to do, to use this script is run the ``start.py`` script and enter the URL you want to check and the results should be printed to your console or IDE.
 
-⚠️ This is a beta version and may have a few bugs, so be aware.
+⚠️ This is a alpha version and may have a few bugs, so be aware.
 
 
 ## Installation 
@@ -68,9 +68,11 @@ To have the RedirectExplorer to work properly without any hiccups, please follow
 	- ``pip install ssl`` in order to make SSL requests to HTTPS websites in the start.py module
 	- ``pip install socket`` in order to create HTTP & HTTPS requests to be sent to the websites in the start.py module 
 	- ``pip install requests`` in order to send requests to the IP information API (<a href="https://ip-api.com">IP-API</a>) used in the utils.py module which is used in the displaying of the results in the start.py module
+	- ``pip install re`` in order to look for URLs in website DOM objects used in the contentparser.py module
+	- ``pip install execjs`` in order to execute javascript-based redirects used in the contentparser.py module
 
 ## Credits & Acknowledgements
 
 
-- The developers of the modules used in this project (<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">bs4</a>, <a href="https://github.com/urllib3/urllib3">urllib3</a>, <a href="https://github.com/python/cpython">ssl</a>, <a href="https://github.com/python/cpython">socket</a> & <a href="https://github.com/psf/requests">requests</a>)
+- The developers of the modules used in this project (<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">bs4</a>, <a href="https://github.com/urllib3/urllib3">urllib3</a>, <a href="https://github.com/python/cpython">ssl</a>, <a href="https://github.com/python/cpython">socket</a>, <a href="https://github.com/psf/requests">requests</a>, <a href="https://github.com/python/cpython">re</a> & <a href="https://github.com/doloopwhile/PyExecJS">execjs</a>)
 - The developers of the <a href="https://ip-api.com">IP-API</a> website
