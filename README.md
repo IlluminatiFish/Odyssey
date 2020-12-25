@@ -14,7 +14,7 @@
 	<strong>
 		<a href="https://github.com/IlluminatiFish/RedirectExplorer/blob/main/README.md#how-to-use">Usage</a>
 		•
-		<a href="#">Download</a>
+		<a href="https://github.com/IlluminatiFish/RedirectExplorer/releases">Download</a>
 	</strong>
 </p>
   
