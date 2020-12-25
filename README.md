@@ -1,6 +1,6 @@
 <h1 align="center">
 	<img
-		width="300"
+		width="450"
 		alt="RedirectExplorer"
 		src="https://cdn.discordapp.com/attachments/617542600144060416/791855082056450058/686970.PNG">
 </h1>
