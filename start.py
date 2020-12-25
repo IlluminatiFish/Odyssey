@@ -1,22 +1,22 @@
 import socket, ssl
 from urllib.parse import urlparse
 
-from contentparser import processContent
-from utils import getData
+from contentparser import process_content
+from utils import get_data
 
 VISITED = {}
 SEGMENT_BUFFER = 8192 # How big you want each sock.recv() call to take byte-wise
 TIMEOUT = 10
 ua = "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
 
-def doGET(url):
+
+def do_get(url):
     '''
-        @:purpose: Sends a correctly formed HTTP 'GET' request using sockets,
-                   to get content from the web server.
+        Sends a correctly formed HTTP 'GET' request using sockets, to get content from the web server.
 
-        @:param url: The URL where you want to get the content from.
+        :param url: The URL where you want to get the content from.
 
-        @:returns raw_response: Returns the raw bytes response from the web server.
+        :returns: Returns the raw bytes response from the web server.
     '''
 
     if url is not None:
@@ -47,14 +47,17 @@ def doGET(url):
 
             if scheme == 'http':
                 sock.connect((domain, port))
+
                 sock.send(request.encode())
-                sock.settimeout(TIMEOUT)  # Default socket operation timeout of X seconds
+
+                sock.settimeout(TIMEOUT)  # Default socket operation timeout of 2 seconds
 
                 raw_response = bytes("".encode())
+
                 while True:
                     try:
                         segment = sock.recv(SEGMENT_BUFFER)
-                    except socket.timeout as exc:
+                    except socket.timeout as ex:
                         print('[-] Socket receiver timed out after {} seconds'.format(TIMEOUT))
                         break
                     if not segment:
@@ -62,16 +65,21 @@ def doGET(url):
                     raw_response += bytes(segment)
 
                 VISITED[url] = socket.gethostbyname(domain)
-                next_url = processContent(raw_response, url)
+                print()
+                print('[HTTP] CURRENT_URL:', url)
+                next_url = process_content(raw_response, url)
+                print('[HTTP] NEXT_URL:', next_url)
+                print()
                 '''
                     If the current url & next url are the same then do not accept
                 '''
                 if url != next_url:
+
                     '''
                         Fixes the script going into an endless loop of the same redirects
                     '''
                     if next_url not in VISITED.keys():
-                        doGET(next_url)
+                        do_get(next_url)
                     else:
                         return
 
@@ -86,10 +94,14 @@ def doGET(url):
                     print('[-] Failed to resolve domain ({})'.format(domain))
                     return
 
+
+
                 ssl_sock.send(request.encode())
-                ssl_sock.settimeout(TIMEOUT) # Default socket operation timeout of X seconds
+
+                ssl_sock.settimeout(TIMEOUT) # Default socket operation timeout of 2 seconds
 
                 raw_response = bytes("".encode())
+
                 while True:
                     try:
                         segment = ssl_sock.recv(SEGMENT_BUFFER)
@@ -102,7 +114,12 @@ def doGET(url):
                     raw_response += bytes(segment)
 
                 VISITED[url] = socket.gethostbyname(domain)
-                next_url = processContent(raw_response, url)
+                print()
+                print('[HTTPS] CURRENT_URL:', url)
+                next_url = process_content(raw_response, url)
+                print('[HTTPS] NEXT_URL:', next_url)
+                print()
+
                 '''
                     If the current url & next url are the same then do not accept
                 '''
@@ -112,14 +129,15 @@ def doGET(url):
                         Fixes the script going into an endless loop of the same redirects
                     '''
                     if next_url not in VISITED.keys():
-                        doGET(next_url)
+                        do_get(next_url)
                     else:
                         return
 
                 ssl_sock.close()
 
+
 URL = input('[*] URL: ')
-doGET(URL)
+do_get(URL)
 
 if len(VISITED.keys()) > 0:
     print()
@@ -128,5 +146,5 @@ if len(VISITED.keys()) > 0:
     count = 1
     for url, msg in VISITED.items():
         if url:
-            print('[No. {}] [{}] ({}, {}, {})  {}'.format(count, getData(msg, 'country'), msg, getData(msg, 'as'), getData(msg, 'org'), url))
+            print('[No. {}] [{}] ({}, {}, {})  {}'.format(count, get_data(msg, 'country'), msg, get_data(msg, 'as'), get_data(msg, 'org'), url))
             count += 1
