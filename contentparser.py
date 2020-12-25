@@ -39,9 +39,8 @@ def process_content(raw_content, url):
             if tag.get('content') and tag.get('http-equiv') and len(find_urls(tag.get('content'))) > 0:
                 url = tag.get('content').split('URL=')[1].replace("'", "")
                 urls.append(url)
+                
         if len(urls) > 0:
-            print('[!] Found URLs in meta: ', urls)
-
             unique_urls = set(urls)  # Get rid of duplicates
             iterator = iter(unique_urls)
             while True:
