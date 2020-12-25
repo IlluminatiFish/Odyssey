@@ -2,7 +2,7 @@
 	<img
 		width="450"
 		alt="RedirectExplorer"
-		src="https://cdn.discordapp.com/attachments/617542600144060416/791855082056450058/686970.PNG">
+		src="https://cdn.discordapp.com/attachments/772368890927644692/791859271649460245/yeeet.png">
 </h1>
 
 
