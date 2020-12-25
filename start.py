@@ -128,5 +128,5 @@ if len(VISITED.keys()) > 0:
     count = 1
     for url, msg in VISITED.items():
         if url:
-            print('[No. {}] [{}] ({}, {}, {})  {}'.format(x, getData(msg, 'country'), msg, getData(msg, 'as'), getData(msg, 'org'), url))
+            print('[No. {}] [{}] ({}, {}, {})  {}'.format(count, getData(msg, 'country'), msg, getData(msg, 'as'), getData(msg, 'org'), url))
             count += 1
