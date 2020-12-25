@@ -12,7 +12,7 @@
 
 <p align="center">
 	<strong>
-		<a href="#">Usage</a>
+		<a href="https://github.com/IlluminatiFish/RedirectExplorer/blob/main/README.md#how-to-use">Usage</a>
 		•
 		<a href="#">Download</a>
 	</strong>
