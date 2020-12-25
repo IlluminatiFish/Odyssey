@@ -24,7 +24,7 @@
 		src="https://img.shields.io/badge/Python-v3.0+-red"></a>
     <a href=""><img
     	alt="Project version"
-        src="https://img.shields.io/badge/Current%20Version-v0.1-red"></a>
+        src="https://img.shields.io/badge/Current%20Version-v0.2-red"></a>
 </p>  
 
 <p align="center">
