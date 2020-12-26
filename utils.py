@@ -63,7 +63,7 @@ def get_value(key, request_data):
     try:
         return dictionarize(request_data)[key]
     except KeyError:
-        return
+        return None
 
 def find_urls(data):
     '''
@@ -76,3 +76,22 @@ def find_urls(data):
 
     regex = re.compile('http[s]?://(?:[\w]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', re.UNICODE)
     return regex.findall(data)
+
+
+
+def get_server(raw_content):
+    '''
+        Gets the Server header from the web server's response
+
+        :param raw_content: The raw content taken from the do_get(url) function.
+
+        :returns: The type of the web server (ex. Apache, Nginx, etc.)
+    '''
+
+    content = raw_content.decode()
+
+    headers = content.split('\r\n\r\n', 1)[0]
+    header_list = headers.splitlines()
+    http_headers = header_list[1:]
+
+    return str(get_value('Server', http_headers))
