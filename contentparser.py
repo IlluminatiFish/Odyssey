@@ -35,11 +35,11 @@ def process_content(raw_content, url):
 
     if len(meta_tags) > 0:
         urls = []
-        for tag in soup.findAll('meta'):
+        for tag in meta_tags:
             if tag.get('content') and tag.get('http-equiv') and len(find_urls(tag.get('content'))) > 0:
-                url = tag.get('content').split('URL=')[1].replace("'", "")
+                url = str(tag.get('content')).lower().split('url=')[1].replace("'", "") # Quick patch to handle all cases of meta tag formats
                 urls.append(url)
-                
+
         if len(urls) > 0:
             unique_urls = set(urls)  # Get rid of duplicates
             iterator = iter(unique_urls)
@@ -53,13 +53,19 @@ def process_content(raw_content, url):
 
     if len(script_lines) > 0:
         for script_line in script_lines:
+
             line_count = len(str(script_line).splitlines())
+
             if line_count > 1:
 
                 clean_script = str(script_line).splitlines()[1: line_count - 1]
+                clean_script = [js.strip() for js in clean_script]
+
+
                 execution_script = ""
 
                 for js in clean_script:
+
 
                     if 'document.location' in str(js) and str(js).startswith('var'):
                         js = js.replace('document.location', '"' + url + '"')
@@ -67,7 +73,17 @@ def process_content(raw_content, url):
                     if 'window.location.href =' in str(js) and str(js).startswith('window.location.href ='):
                         js = js.replace('window.location.href =', 'return')
 
+                    if 'window.location.href' in str(js) and str(js).startswith('var'):
+                        js = js.replace('window.location.href', '"' + url + '"')
+
+                    if 'document.location.href' in str(js) and str(js).startswith('document.location.href'):
+                        js = js.replace('document.location.href =', 'return')
+                        
+                    if 'document.location.href.replace' in str(js):
+                        js = js.replace('document.location.href', '"' + url + '"')
+
                     execution_script += js + '\n'
+
 
                 compiler = execjs.compile(execution_script)
 
@@ -75,3 +91,19 @@ def process_content(raw_content, url):
                     return compiler.eval('')
                 except Exception as ex:
                     print('An unknown JavaScript compiler error ocurred, {}'.format(ex))
+
+
+            clean_script = str(script_line).replace('<script type="text/javascript">', '').replace('</script>', '')
+            script = ""
+
+            if 'window.location.href=' in str(clean_script) and str(clean_script).startswith('window.location.href='):
+                script += clean_script.replace('window.location.href=', 'return ')
+            script += ';'
+
+            compiler = execjs.compile(script)
+
+            try:
+                return compiler.eval('')
+            except Exception as ex:
+                print('An unknown JavaScript compiler error ocurred, {}'.format(ex))
+
