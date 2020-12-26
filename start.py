@@ -2,7 +2,7 @@ import socket, ssl
 from urllib.parse import urlparse
 
 from contentparser import process_content
-from utils import get_data
+from utils import get_data, get_server
 
 VISITED = {}
 SEGMENT_BUFFER = 8192 # How big you want each sock.recv() call to take byte-wise
@@ -20,8 +20,14 @@ def do_get(url):
     '''
 
     if url is not None:
+
+
+
         scheme = str(urlparse(url).scheme)
         domain = str(urlparse(url).netloc)
+
+        root = scheme + '://' + domain
+
 
         if domain:
             if ':' in domain: # Catches ports in the netloc from urlparse (Ex. some.domain:xxxx)
@@ -31,12 +37,15 @@ def do_get(url):
 
             path = raw_path # Set current path to the raw_path
 
-            # This gets rid of any fragements or queries in the URL
             if urlparse(raw_path).query:
+
                 path = urlparse(raw_path).path + '?' + urlparse(raw_path).query
 
-            if urlparse(raw_path).fragment:
-                path = urlparse(raw_path).path
+                if urlparse(raw_path).fragment:
+                    path = path + '#' + urlparse(raw_path).fragment
+
+            if urlparse(raw_path).fragment: # If we have a fragement in the URL such as (https://bit.ly/37O7zEf#HJEDY_BRMFE_6PIHS) we should get rid of it
+                path = path.split('#')[0]
 
             port = 80 if scheme == "http" else 443
 
@@ -64,24 +73,32 @@ def do_get(url):
                         break
                     raw_response += bytes(segment)
 
-                VISITED[url] = socket.gethostbyname(domain)
+                VISITED[url] = socket.gethostbyname(domain) + '/' + get_server(raw_response)
                 print()
                 print('[HTTP] CURRENT_URL:', url)
                 next_url = process_content(raw_response, url)
                 print('[HTTP] NEXT_URL:', next_url)
                 print()
-                '''
-                    If the current url & next url are the same then do not accept
-                '''
-                if url != next_url:
 
+                if next_url is not None:
                     '''
-                        Fixes the script going into an endless loop of the same redirects
+                        If the current url & next url are the same then do not accept
                     '''
-                    if next_url not in VISITED.keys():
-                        do_get(next_url)
-                    else:
-                        return
+                    if url != next_url:
+
+                        '''
+                            Fixes the script going into an endless loop of the same redirects
+                        '''
+                        if next_url not in VISITED.keys():
+
+                            if next_url.startswith('/'):  # Local page redirects caught by this
+                                do_get(root + next_url)
+
+                            do_get(next_url)
+                        else:
+                            return
+
+
 
                 sock.close()
 
@@ -113,25 +130,30 @@ def do_get(url):
                         break
                     raw_response += bytes(segment)
 
-                VISITED[url] = socket.gethostbyname(domain)
+                VISITED[url] = socket.gethostbyname(domain) + '/' + get_server(raw_response)
                 print()
                 print('[HTTPS] CURRENT_URL:', url)
                 next_url = process_content(raw_response, url)
                 print('[HTTPS] NEXT_URL:', next_url)
                 print()
 
-                '''
-                    If the current url & next url are the same then do not accept
-                '''
-                if url != next_url:
+                if next_url is not None:
+                    '''
+                        If the current url & next url are the same then do not accept
+                    '''
+                    if url != next_url:
 
-                    '''
-                        Fixes the script going into an endless loop of the same redirects
-                    '''
-                    if next_url not in VISITED.keys():
-                        do_get(next_url)
-                    else:
-                        return
+                        '''
+                            Fixes the script going into an endless loop of the same redirects
+                        '''
+                        if next_url not in VISITED.keys():
+
+                            if next_url.startswith('/'): # Local page redirects caught by this
+                                do_get(root + next_url)
+
+                            do_get(next_url)
+                        else:
+                            return
 
                 ssl_sock.close()
 
@@ -145,6 +167,9 @@ if len(VISITED.keys()) > 0:
     print()
     count = 1
     for url, msg in VISITED.items():
-        if url:
-            print('[No. {}] [{}] ({}, {}, {})  {}'.format(count, get_data(msg, 'country'), msg, get_data(msg, 'as'), get_data(msg, 'org'), url))
+        if url and msg:
+            ip = msg.split('/', 1)[0]
+            server = msg.split('/', 1)[1]
+
+            print('[No. {}] [Server: {}] [{}] ({}, {}, {})  {}'.format(count, server, get_data(ip, 'country'), ip, get_data(ip, 'as'), get_data(ip, 'org'), url))
             count += 1
