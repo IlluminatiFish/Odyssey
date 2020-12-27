@@ -14,6 +14,7 @@ def process_content(raw_content, url):
         :returns: The next url in the redirect chain.
     '''
 
+    # Very bad method, as it does not account for all other language characters, needs to be fixed in the future
     content = raw_content.decode()
 
     headers = content.split('\r\n\r\n', 1)[0]
@@ -24,6 +25,7 @@ def process_content(raw_content, url):
     http_status = int(header_list[:1][0].split(' ')[1])
 
     http_headers = header_list[1:]
+
 
     soup = BeautifulSoup(dom_object, 'html.parser')
 
@@ -83,7 +85,6 @@ def process_content(raw_content, url):
                         js = js.replace('document.location.href', '"' + url + '"')
 
                     execution_script += js + '\n'
-
 
                 compiler = execjs.compile(execution_script)
 
