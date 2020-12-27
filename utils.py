@@ -1,3 +1,4 @@
+import codecs
 import re, requests
 
 
@@ -88,6 +89,7 @@ def get_server(raw_content):
         :returns: The type of the web server (ex. Apache, Nginx, etc.)
     '''
 
+    # Very bad method, as it does not account for all other language characters, needs to be fixed in the future
     content = raw_content.decode()
 
     headers = content.split('\r\n\r\n', 1)[0]
@@ -95,3 +97,59 @@ def get_server(raw_content):
     http_headers = header_list[1:]
 
     return str(get_value('Server', http_headers))
+
+
+def get_cookies(raw_content, tracking):
+    '''
+        Gets all the cookies set by the web server given by the Set-Cookie headers in the response
+
+        :param raw_content: The raw content taken from the do_get(url) function.
+        :param tracking: A setting if you want only tracking cookies or all cookies from this function.
+
+        :returns: A list of cookies depending on the :param tracking: setting, could be
+                  a list of tracking cookies or all cookies found.
+    '''
+
+    # Very bad method, as it does not account for all other language characters, needs to be fixed in the future
+    content = raw_content.decode()
+
+    headers = content.split('\r\n\r\n', 1)[0]
+    header_list = headers.splitlines()
+    http_headers = header_list[1:]
+
+    # Tracking cookies identified
+
+    # Prefix: - Usage
+    # enc_aff_session_* and ho_mob: - https://help.tune.com/hasoffers/pixel-tracking/ / https://gyazo.com/09cd1743faefd10104850b995b982591
+    # cep-v4: - https://webcookies.org/cookie/http/cep-v4/1407350
+    # voluum-cid-v4: - https://voluum.com/
+    # trackingID: -  N/A
+
+    clear_cookie_prefixes = ['__cfduid', '_bit', 'PHPSESSID', 'XSRF-TOKEN'] # Skips 'good' cookies
+    tracking_cookie_prefixes = ['enc_aff_session_', 'ho_mob', 'cep-v4', 'uniqueClick_', 'click_id', 'voluum-cid-v4', 'trackingID']
+
+    cookies = []
+    trackers = []
+
+
+    for http_header in http_headers:
+        if str(http_header).startswith('Set-Cookie: '):
+
+            cookie_value = str(http_header).split('Set-Cookie: ')[1]
+            cookie_prefix = cookie_value.split('=')[0]
+
+            if cookie_prefix in clear_cookie_prefixes: # Skip 'good' cookies
+                continue
+
+
+            for tracking_cookie_prefix in tracking_cookie_prefixes:
+                if cookie_value.startswith(tracking_cookie_prefix):
+                    print('[!] Tracking cookie detected\n\t- Cookie Value: {}'.format(cookie_value))
+                    trackers.append(cookie_value)
+
+            cookies.append(cookie_value)
+
+    if tracking == True:
+        return str(trackers)
+    else:
+        return str(cookies)
