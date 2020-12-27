@@ -1,8 +1,9 @@
+import ast
 import socket, ssl
 from urllib.parse import urlparse
 
 from contentparser import process_content
-from utils import get_data, get_server
+from utils import get_data, get_server, get_cookies
 
 VISITED = {}
 SEGMENT_BUFFER = 8192 # How big you want each sock.recv() call to take byte-wise
@@ -73,7 +74,7 @@ def do_get(url):
                         break
                     raw_response += bytes(segment)
 
-                VISITED[url] = socket.gethostbyname(domain) + '/' + get_server(raw_response)
+                VISITED[url] = socket.gethostbyname(domain) + '**' + get_server(raw_response) + '**' + get_cookies(raw_response, True)
                 print()
                 print('[HTTP] CURRENT_URL:', url)
                 next_url = process_content(raw_response, url)
@@ -130,12 +131,13 @@ def do_get(url):
                         break
                     raw_response += bytes(segment)
 
-                VISITED[url] = socket.gethostbyname(domain) + '/' + get_server(raw_response)
+                VISITED[url] = socket.gethostbyname(domain) + '**' + get_server(raw_response) + '**' + get_cookies(raw_response, True)
                 print()
                 print('[HTTPS] CURRENT_URL:', url)
                 next_url = process_content(raw_response, url)
                 print('[HTTPS] NEXT_URL:', next_url)
                 print()
+
 
                 if next_url is not None:
                     '''
@@ -168,8 +170,21 @@ if len(VISITED.keys()) > 0:
     count = 1
     for url, msg in VISITED.items():
         if url and msg:
-            ip = msg.split('/', 1)[0]
-            server = msg.split('/', 1)[1]
+            data = msg.split('**') # Get rid of data delimeter
+            ip = data[0]
+            server = data[1]
+            tracking_cookies = ast.literal_eval(str(data[2])) # Convert our list of type string to a list type again
 
-            print('[No. {}] [Server: {}] [{}] ({}, {}, {})  {}'.format(count, server, get_data(ip, 'country'), ip, get_data(ip, 'as'), get_data(ip, 'org'), url))
+            result = "[No. {}]\n\t - Server: {}\n\t - Country: {} \n\t - Metadata: {}, {}, {}\n\t - URL: {}".format(count, server, get_data(ip, 'country'), ip, get_data(ip, 'as'), get_data(ip, 'org'), url)
+
+            if len(tracking_cookies) > 0:
+                result += '\n\t - Tracking Cookies:\n\t\t - Count: {}\n\t\t - Cookie Value:'.format(len(tracking_cookies))
+
+            for tracking_cookie in tracking_cookies:
+                result += '\n\t\t\t - ' + tracking_cookie
+
+
+            print(result)
+            print()
+
             count += 1
