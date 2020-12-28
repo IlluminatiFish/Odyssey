@@ -1,4 +1,3 @@
-import codecs
 import re, requests
 
 
