@@ -70,7 +70,8 @@ To have the RedirectExplorer to work properly without any hiccups, please follow
 	- ``pip install requests`` in order to send requests to the IP information API (<a href="https://ip-api.com">IP-API</a>) used in the utils.py module which is used in the displaying of the results in the start.py module
 	- ``pip install re`` in order to look for URLs in website DOM objects used in the contentparser.py module
 	- ``pip install execjs`` in order to execute javascript-based redirects used in the contentparser.py module
-
+	- ``pip install ast`` in order to make a string back into a list used for tracking cookies displayed in start.py module
+	
 ## Credits & Acknowledgements
 
 
