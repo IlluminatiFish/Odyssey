@@ -1,9 +1,8 @@
-import ast
-import socket, ssl
+import ast, socket, ssl
 from urllib.parse import urlparse
 
 from contentparser import process_content
-from utils import get_data, get_server, get_cookies
+from utils import get_data, get_server, get_cookies, get_ssl_cert
 
 VISITED = {}
 SEGMENT_BUFFER = 8192 # How big you want each sock.recv() call to take byte-wise
@@ -170,6 +169,7 @@ if len(VISITED.keys()) > 0:
     count = 1
     for url, msg in VISITED.items():
         if url and msg:
+
             data = msg.split('**') # Get rid of data delimeter
             ip = data[0]
             server = data[1]
@@ -177,12 +177,26 @@ if len(VISITED.keys()) > 0:
 
             result = "[No. {}]\n\t - Server: {}\n\t - Country: {} \n\t - Metadata: {}, {}, {}\n\t - URL: {}".format(count, server, get_data(ip, 'country'), ip, get_data(ip, 'as'), get_data(ip, 'org'), url)
 
+            # SSL Certificate metadata retrieval
+            url_cert = get_ssl_cert(url)
+            if url_cert:
+
+                cert_subject_dict = dict(cert_data[0] for cert_data in url_cert['subject'])
+                cert_subject = cert_subject_dict['commonName']
+
+                cert_issuer_dict = dict(cert_data[0] for cert_data in url_cert['issuer'])
+                cert_issuer = cert_issuer_dict['commonName']
+
+                cert_serial = url_cert['serialNumber']
+
+                result += '\n\t - SSL Certificate:\n\t\t - Subject: {}\n\t\t - Issuer: {}\n\t\t - Serial Number: {}'.format(cert_subject, cert_issuer, cert_serial)
+
+            # Tracking Cookie retrieval
             if len(tracking_cookies) > 0:
                 result += '\n\t - Tracking Cookies:\n\t\t - Count: {}\n\t\t - Cookie Value:'.format(len(tracking_cookies))
 
             for tracking_cookie in tracking_cookies:
                 result += '\n\t\t\t - ' + tracking_cookie
-
 
             print(result)
             print()
