@@ -28,8 +28,9 @@ def process_content(raw_content, url):
 
     soup = BeautifulSoup(dom_object, 'html.parser')
 
-    meta_tags = soup.findAll('meta')
-    script_lines = soup.find_all('script')  # Changed from findAll() to find_all() to iterate over the rest of the scripts found marked by <script> tags
+    # Changed from findAll() to find_all() to iterate over the rest of the tags
+    meta_tags = soup.find_all('meta')
+    script_lines = soup.find_all('script')  
 
 
     if get_value('Location', http_headers):
