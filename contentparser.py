@@ -1,4 +1,4 @@
-import execjs
+import re, execjs
 from bs4 import BeautifulSoup
 
 from utils import get_value, find_urls
@@ -15,7 +15,7 @@ def process_content(raw_content, url):
     '''
 
     # Very bad method, as it does not account for all other language characters, needs to be fixed in the future
-    content = raw_content.decode()
+    content = raw_content.decode('unicode-escape')
 
     headers = content.split('\r\n\r\n', 1)[0]
     dom_object = content.split('\r\n\r\n', 1)[1]
@@ -26,11 +26,11 @@ def process_content(raw_content, url):
 
     http_headers = header_list[1:]
 
-
     soup = BeautifulSoup(dom_object, 'html.parser')
 
     meta_tags = soup.findAll('meta')
-    script_lines = soup.findAll('script')
+    script_lines = soup.find_all('script')  # Changed from findAll() to find_all() to iterate over the rest of the scripts found marked by <script> tags
+
 
     if get_value('Location', http_headers):
         return get_value('Location', http_headers)
@@ -63,11 +63,9 @@ def process_content(raw_content, url):
                 clean_script = str(script_line).splitlines()[1: line_count - 1]
                 clean_script = [js.strip() for js in clean_script]
 
-
                 execution_script = ""
 
                 for js in clean_script:
-
 
                     if 'document.location' in str(js) and str(js).startswith('var'):
                         js = js.replace('document.location', '"' + url + '"')
@@ -91,20 +89,29 @@ def process_content(raw_content, url):
                 try:
                     return compiler.eval('')
                 except Exception as ex:
-                    print('An unknown JavaScript compiler error ocurred, {}'.format(ex))
+                    continue # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
 
 
-            clean_script = str(script_line).replace('<script type="text/javascript">', '').replace('</script>', '')
-            script = ""
+            # Regex pattern to get rid of any HTML tags, better than the old method used
+            clean_script = re.sub('<.*?>', '', str(script_line))
 
-            if 'window.location.href=' in str(clean_script) and str(clean_script).startswith('window.location.href='):
-                script += clean_script.replace('window.location.href=', 'return ')
-            script += ';'
+            if len(clean_script) > 0:
 
-            compiler = execjs.compile(script)
+                script = ""
 
-            try:
-                return compiler.eval('')
-            except Exception as ex:
-                print('An unknown JavaScript compiler error ocurred, {}'.format(ex))
+                if 'window.location.href=' in str(clean_script) and str(clean_script).startswith('window.location.href='):
+                    script += clean_script.replace('window.location.href=', 'return ')
 
+                if 'window.location = ' in str(clean_script) and str(clean_script).startswith('window.location = '):
+                    script += clean_script.replace('window.location = ', 'return ')
+
+                script += ';'
+
+                compiler = execjs.compile(script)
+
+                try:
+                    return compiler.eval('')
+                except Exception as ex:
+                    continue # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
+
+            continue
