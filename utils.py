@@ -1,4 +1,5 @@
-import re, requests
+import re, requests, socket, ssl
+from urllib.parse import urlparse
 
 
 def get_data(ip, type):
@@ -89,7 +90,7 @@ def get_server(raw_content):
     '''
 
     # Very bad method, as it does not account for all other language characters, needs to be fixed in the future
-    content = raw_content.decode()
+    content = raw_content.decode('unicode-escape')
 
     headers = content.split('\r\n\r\n', 1)[0]
     header_list = headers.splitlines()
@@ -110,36 +111,47 @@ def get_cookies(raw_content, tracking):
     '''
 
     # Very bad method, as it does not account for all other language characters, needs to be fixed in the future
-    content = raw_content.decode()
+    content = raw_content.decode('unicode-escape')
 
     headers = content.split('\r\n\r\n', 1)[0]
     header_list = headers.splitlines()
     http_headers = header_list[1:]
 
-    # Tracking cookies identified
 
-    # Prefix: - Usage
-    # enc_aff_session_* and ho_mob: - https://help.tune.com/hasoffers/pixel-tracking/ / https://gyazo.com/09cd1743faefd10104850b995b982591
-    # cep-v4: - https://webcookies.org/cookie/http/cep-v4/1407350
-    # voluum-cid-v4: - https://voluum.com/
-    # trackingID: -  N/A
+    clear_cookie_prefixes = ['__cfduid', '_bit', 'PHPSESSID', 'XSRF-TOKEN']
 
-    clear_cookie_prefixes = ['__cfduid', '_bit', 'PHPSESSID', 'XSRF-TOKEN'] # Skips 'good' cookies
-    tracking_cookie_prefixes = ['enc_aff_session_', 'ho_mob', 'cep-v4', 'uniqueClick_', 'click_id', 'voluum-cid-v4', 'trackingID']
+    tracking_cookie_prefixes = [
+        'enc_aff_session_',
+        'ho_mob',
+        'cep-v4',
+        'uniqueClick_',
+        'click_id',
+        'voluum-cid-v4',
+        'trackingID',
+        'lt_tr',
+        'clicks',
+        'brwsr',
+        'hexa', #hexa.sid
+        'trk',
+        'trackingid',
+        'geoip_country',
+        'LanguageCode'
+    ]
 
     cookies = []
     trackers = []
-
 
     for http_header in http_headers:
         if str(http_header).startswith('Set-Cookie: '):
 
             cookie_value = str(http_header).split('Set-Cookie: ')[1]
+
+            print(cookie_value)
+
             cookie_prefix = cookie_value.split('=')[0]
 
             if cookie_prefix in clear_cookie_prefixes: # Skip 'good' cookies
                 continue
-
 
             for tracking_cookie_prefix in tracking_cookie_prefixes:
                 if cookie_value.startswith(tracking_cookie_prefix):
@@ -152,3 +164,48 @@ def get_cookies(raw_content, tracking):
         return str(trackers)
     else:
         return str(cookies)
+
+
+def get_ssl_cert(url):
+    '''
+        Gets the ssl certificate from the :param url:
+
+        :param url: The url you want to get the ssl certificate from.
+
+        :returns: The ssl certificate from the :param url:
+    '''
+
+    scheme = urlparse(url).scheme
+
+    if scheme == 'http': # We don't need HTTP URLs
+        return
+
+    domain = urlparse(url).netloc
+    if ':' in domain:
+        domain = domain.split(':')[0]
+
+    if domain:
+        ip = None
+
+        try:
+            ip = socket.gethostbyname(domain) # Resolve the domain to an IP
+        except Exception as exec:
+            print(exec, 'failed to resolve on domain {}'.format(domain))
+
+        context = ssl.SSLContext()
+        context.verify_mode = ssl.CERT_REQUIRED
+        context.load_default_certs()
+
+        base_socket = socket.socket()
+        ssl_socket = context.wrap_socket(base_socket, server_hostname=domain)
+        cert = None
+
+        try:
+            ssl_socket.connect((ip, 443))
+            cert = ssl_socket.getpeercert()
+        except Exception as exec:
+            print(exec, 'failed to connect on {}:{}'.format(ip, 443))
+
+        return cert
+
+
