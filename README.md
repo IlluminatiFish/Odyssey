@@ -24,7 +24,7 @@
 		src="https://img.shields.io/badge/Python-v3.0+-red"></a>
     <a href=""><img
     	alt="Project version"
-        src="https://img.shields.io/badge/Current%20Version-v0.5-red"></a>
+        src="https://img.shields.io/badge/Current%20Version-v0.6-red"></a>
 </p>  
 
 <p align="center">
@@ -48,7 +48,7 @@ To learn more about the uses of redirects, and what redirects are, please read [
 ## How To Use
 
 RedirectExplorer requires you to have ![Python](https://img.shields.io/badge/Python-informational?style=plastic&logo=python&logoColor=black&color=228ff5) on your system. The recommended version of your ![Python](https://img.shields.io/badge/Python-informational?style=plastic&logo=python&logoColor=black&color=228ff5) installation is version 3 or above.
-You will also be required to install some Python modules from [here](https://pypi.org/). To install all the required modules listed here, please just follow the installation instructions found in the next section.
+You will also be required to install some Python modules from [here](https://pypi.org/) unless otherwise stated in this README. To install all the required modules listed here, please just follow the installation instructions found in the next section.
 
 All you have to do, to use this script is run the ``start.py`` script and enter the URL you want to check and the results should be printed to your console or IDE.
 
@@ -71,9 +71,10 @@ To have the RedirectExplorer to work properly without any hiccups, please follow
 	- ``pip install re`` in order to look for URLs in website DOM objects used in the contentparser.py module
 	- ``pip install execjs`` in order to execute javascript-based redirects used in the contentparser.py module
 	- ``pip install ast`` in order to make a string back into a list used for tracking cookies displayed in start.py module
+	- ``pip install folium`` in order to create the URL traceroute map seen from versions above 0.6
 	
 ## Credits & Acknowledgements
 
 
-- The developers of the modules used in this project (<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">bs4</a>, <a href="https://github.com/urllib3/urllib3">urllib3</a>, <a href="https://github.com/python/cpython">ssl</a>, <a href="https://github.com/python/cpython">socket</a>, <a href="https://github.com/psf/requests">requests</a>, <a href="https://github.com/python/cpython">re</a> & <a href="https://github.com/doloopwhile/PyExecJS">execjs</a>)
+- The developers of the modules used in this project (<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">bs4</a>, <a href="https://github.com/urllib3/urllib3">urllib3</a>, <a href="https://github.com/python/cpython">ssl</a>, <a href="https://github.com/python/cpython">socket</a>, <a href="https://github.com/psf/requests">requests</a>, <a href="https://github.com/python/cpython">re</a>, <a href="https://python-visualization.github.io/folium/">folium</a> & <a href="https://github.com/doloopwhile/PyExecJS">execjs</a>)
 - The developers of the <a href="https://ip-api.com">IP-API</a> website
