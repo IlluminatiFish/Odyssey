@@ -1,4 +1,4 @@
-import ast, socket, ssl
+import ast, socket, ssl, time, folium
 from urllib.parse import urlparse
 
 from contentparser import process_content
@@ -162,12 +162,25 @@ def do_get(url):
 URL = input('[*] URL: ')
 do_get(URL)
 
+
+
+
 if len(VISITED.keys()) > 0:
     print()
     print('[+] Redirect Traceroute (Size: {})'.format(len(VISITED.keys())))
     print()
+
     count = 1
+
+    MAP_CENTER = [0, 0]
+    route_map = folium.Map(location=MAP_CENTER, zoom_start=2.5)
+
+    locations = []
+
+
     for url, msg in VISITED.items():
+
+        time.sleep(10) # This is needed as IP-API is rate-limited to a certain amount of requests per minute (which is 45 I believe)
         if url and msg:
 
             data = msg.split('**') # Get rid of data delimeter
@@ -201,4 +214,31 @@ if len(VISITED.keys()) > 0:
             print(result)
             print()
 
+            # Route map generation using Folium
+            html = '''
+                <p style="font-family:'Courier New'">
+                    URL: {}
+                    <br>
+                    IP: {}
+                    <br>
+                    ASN: {}
+                    <br>
+                    ORG: {}
+                    <br>
+                    ISP: {}
+                </p>
+            '''.format(url, ip, get_data(ip, 'as').split(' ')[0], get_data(ip, 'org'), get_data(ip, 'isp'))
+
+            iframe = folium.IFrame(html, width=400, height=150)
+            popup = folium.Popup(iframe)
+
+            lat = get_data(ip, 'lat')
+            lon = get_data(ip, 'lon')
+            folium.Marker((lat, lon), popup=popup).add_to(route_map)
+            locations.append((lat, lon))
+
             count += 1
+
+folium.PolyLine(locations=locations, line_opacity=0.5, color='red').add_to(route_map)
+
+route_map.save('route_map.html') #Save the route map in the folder it is in as 'route_map.html'
