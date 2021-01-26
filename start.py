@@ -216,7 +216,9 @@ if len(VISITED.keys()) > 0:
 
             # Route map generation using Folium
             html = '''
-                <p style="font-family:'Courier New'">
+                <link rel="preconnect" href="https://fonts.gstatic.com">
+                <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+                <p style="font-family: 'Space Mono', monospace;">
                     URL: {}
                     <br>
                     IP: {}
@@ -229,16 +231,37 @@ if len(VISITED.keys()) > 0:
                 </p>
             '''.format(url, ip, get_data(ip, 'as').split(' ')[0], get_data(ip, 'org'), get_data(ip, 'isp'))
 
-            iframe = folium.IFrame(html, width=400, height=150)
+            iframe = folium.IFrame(html, width=600, height=250)
             popup = folium.Popup(iframe)
 
             lat = get_data(ip, 'lat')
             lon = get_data(ip, 'lon')
-            folium.Marker((lat, lon), popup=popup).add_to(route_map)
+
+            # Added to avoid confusion, to see if URL coords are already in list,
+            # if so adjust the next URL's coords to be distinct from the previous URL.
+            offset = 0.005
+
+            if (lat, lon) in locations:
+                lat, lon = lat + offset, lon + offset
+
+            START_DATA = (1, 'green')
+            BOUNCE_DATA = ([x for x in range(1, len(VISITED.keys()))], 'orange')
+            END_DATA = (len(VISITED.keys()), 'red')
+
+
+
+            if count == START_DATA[0]:
+                folium.Marker((lat, lon), popup=popup, icon=folium.Icon(color=START_DATA[1], icon="glyphicon-flash", prefix="glyphicon")).add_to(route_map)
+            elif count == END_DATA[0]:
+                folium.Marker((lat, lon), popup=popup, icon=folium.Icon(color=END_DATA[1], icon="glyphicon-flash", prefix="glyphicon")).add_to(route_map)
+            else:
+                folium.Marker((lat, lon), popup=popup, icon=folium.Icon(color=BOUNCE_DATA[1], icon="glyphicon-flash", prefix="glyphicon")).add_to(route_map)
+
+
             locations.append((lat, lon))
 
             count += 1
 
-folium.PolyLine(locations=locations, line_opacity=0.5, color='red').add_to(route_map)
+folium.PolyLine(locations=locations, line_opacity=0.5, color='black').add_to(route_map)
 
 route_map.save('route_map.html') #Save the route map in the folder it is in as 'route_map.html'
