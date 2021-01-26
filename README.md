@@ -3,6 +3,10 @@
 		width="450"
 		alt="RedirectExplorer"
 		src="https://cdn.discordapp.com/attachments/772368890927644692/791859271649460245/yeeet.png">
+	<img
+		width="450"
+		alt="RedirectExplorer"
+		src="https://cdn.discordapp.com/attachments/361528084161232902/803697134125056090/unknown.png">
 </h1>
 
 
@@ -24,7 +28,7 @@
 		src="https://img.shields.io/badge/Python-v3.0+-red"></a>
     <a href=""><img
     	alt="Project version"
-        src="https://img.shields.io/badge/Current%20Version-v0.6-red"></a>
+        src="https://img.shields.io/badge/Current%20Version-v0.7-red"></a>
 </p>  
 
 <p align="center">
