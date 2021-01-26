@@ -3,10 +3,6 @@
 		width="450"
 		alt="RedirectExplorer"
 		src="https://cdn.discordapp.com/attachments/772368890927644692/791859271649460245/yeeet.png">
-	<img
-		width="450"
-		alt="RedirectExplorer"
-		src="https://cdn.discordapp.com/attachments/361528084161232902/803697134125056090/unknown.png">
 </h1>
 
 
@@ -33,6 +29,7 @@
 
 <p align="center">
 	<img src="https://i.gyazo.com/b82c8b2e36a5ecefdc0a3251ff3176f0.png" width="550">
+	<img src="https://cdn.discordapp.com/attachments/361528084161232902/803697134125056090/unknown.png" width="550">
 </p>
 
 ## Use Cases
