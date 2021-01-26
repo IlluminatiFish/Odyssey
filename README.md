@@ -77,5 +77,5 @@ To have the RedirectExplorer to work properly without any hiccups, please follow
 ## Credits & Acknowledgements
 
 
-- The developers of the modules used in this project (<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">bs4</a>, <a href="https://github.com/urllib3/urllib3">urllib3</a>, <a href="https://github.com/python/cpython">ssl</a>, <a href="https://github.com/python/cpython">socket</a>, <a href="https://github.com/psf/requests">requests</a>, <a href="https://github.com/python/cpython">re</a>, <a href="https://python-visualization.github.io/folium/">folium</a> & <a href="https://github.com/doloopwhile/PyExecJS">execjs</a>)
+- The developers of the modules used in this project (<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">bs4</a>, <a href="https://github.com/urllib3/urllib3">urllib3</a>, <a href="https://github.com/python/cpython">ssl</a>, <a href="https://github.com/python/cpython">socket</a>, <a href="https://github.com/psf/requests">requests</a>, <a href="https://github.com/python/cpython">re</a>, <a href="https://python-visualization.github.io/folium/">folium</a>, <a href="https://github.com/python/cpython">ast</a> & <a href="https://github.com/doloopwhile/PyExecJS">execjs</a>)
 - The developers of the <a href="https://ip-api.com">IP-API</a> website
