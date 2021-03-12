@@ -189,8 +189,8 @@ def get_ssl_cert(url):
 
         try:
             ip = socket.gethostbyname(domain) # Resolve the domain to an IP
-        except Exception as exec:
-            print(exec, 'failed to resolve on domain {}'.format(domain))
+        except Exception as exc:
+            print(exc, 'failed to resolve on domain {}'.format(domain))
 
         context = ssl.SSLContext()
         context.verify_mode = ssl.CERT_REQUIRED
