@@ -66,7 +66,7 @@ def do_get(url):
                 while True:
                     try:
                         segment = sock.recv(SEGMENT_BUFFER)
-                    except socket.timeout as ex:
+                    except socket.timeout:
                         print('[-] Socket receiver timed out after {} seconds'.format(TIMEOUT))
                         break
                     if not segment:
@@ -107,7 +107,7 @@ def do_get(url):
                 ssl_sock = context.wrap_socket(sock, server_hostname=domain)
                 try:
                     ssl_sock.connect((domain, port))
-                except socket.gaierror as ex:
+                except socket.gaierror:
                     print('[-] Failed to resolve domain ({})'.format(domain))
                     return
 
