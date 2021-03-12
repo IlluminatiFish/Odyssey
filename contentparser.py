@@ -152,7 +152,7 @@ def process_content(raw_content, url):
 
                 try:
                     return compiler.eval('')
-                except Exception as ex:
+                except Exception:
                     continue # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
 
             continue
