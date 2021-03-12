@@ -24,8 +24,6 @@ def process_content(raw_content, url):
 
     header_list = headers.splitlines()
 
-    http_status = int(header_list[:1][0].split(' ')[1])
-
     http_headers = header_list[1:]
 
     soup = BeautifulSoup(dom_object, 'html.parser')
@@ -123,7 +121,7 @@ def process_content(raw_content, url):
                 try:
                     print(compiler.eval(''))
                     return compiler.eval('')
-                except Exception as ex:
+                except Exception:
                     continue # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
 
 
