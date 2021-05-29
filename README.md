@@ -2,7 +2,7 @@
 	<img
 		width="450"
 		alt="Odyssey"
-		src="https://cdn.discordapp.com/attachments/361528084161232902/847980516400562186/odyssey-logo.png">
+		src="https://cdn.discordapp.com/attachments/361528084161232902/848025663016534046/odyssey-logo-rd.png">
 </h1>
 
 
