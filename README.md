@@ -52,14 +52,14 @@ To learn more about the uses of redirects, and what redirects are, please read [
 - A python installation above 3.0+, which you can download from the official python website <a href="http://www.python.org/download/">here</a>.
 
 
-## Installation 
+# Installation 
 
 To have Odyssey work properly without any hiccups, please follow the instructions below.
 
 - Clone this repository
 - Then execute the command ``pip install requirements.txt``
 	
-## Credits & Acknowledgements
+# Acknowledgements
 
 - The developers of the modules used in this project
 - The developers of the <a href="https://ip-api.com">IP-API</a> website
