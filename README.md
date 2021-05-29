@@ -12,19 +12,19 @@
 
 <p align="center">
 	<strong>
-		<a href="https://github.com/IlluminatiFish/RedirectExplorer/blob/main/README.md#how-to-use">Usage</a>
+		<a href="https://github.com/IlluminatiFish/Odyssey/blob/main/README.md#how-to-use">Usage</a>
 		•
-		<a href="https://github.com/IlluminatiFish/RedirectExplorer/releases">Download</a>
+		<a href="https://github.com/IlluminatiFish/Odyssey/releases">Download</a>
 	</strong>
 </p>
   
 <p align="center">
 	<a href=""><img
 		alt="Python version"
-		src="https://img.shields.io/badge/Python-v3.0+-blue"></a>
+		src="https://img.shields.io/badge/Python-v3.0+-6ae8ff"></a>
     <a href=""><img
     	alt="Project version"
-        src="https://img.shields.io/badge/Current%20Version-v0.8-blue"></a>
+        src="https://img.shields.io/badge/Current%20Version-v0.8-6ae8ff"></a>
 	<a href="#"><img alt="Codacy Grade" src="https://app.codacy.com/project/badge/Grade/06c8bdaa68414b7b84c096dbd47c0944"></a>
 </p>  
 
