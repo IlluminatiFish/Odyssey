@@ -47,14 +47,9 @@
 To learn more about the uses of redirects, and what redirects are, please read [this article](https://en.ryte.com/wiki/Redirect).
 
 
-## How To Use
+# Requirements
 
-RedirectExplorer requires you to have ![Python](https://img.shields.io/badge/Python-informational?style=plastic&logo=python&logoColor=black&color=228ff5) on your system. The recommended version of your ![Python](https://img.shields.io/badge/Python-informational?style=plastic&logo=python&logoColor=black&color=228ff5) installation is version 3 or above.
-You will also be required to install some Python modules from [here](https://pypi.org/) unless otherwise stated in this README. To install all the required modules listed here, please just follow the installation instructions found in the next section.
-
-All you have to do, to use this script is run the ``bootstrap.py`` script and enter the URL you want to check and the results should be printed to your console or IDE.
-
-⚠️ This is a alpha version and may have a few bugs, so be aware.
+- A python installation above 3.0+, which you can download from the official python website <a href="http://www.python.org/download/">here</a>.
 
 
 ## Installation 
