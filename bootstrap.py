@@ -1,8 +1,8 @@
-import ast, folium
-
 from odyssey.core.tracer.trace_path import do_trace
 from odyssey.core.utils.get_certs import get_ssl_cert
 from odyssey.core.utils.get_ip_data import get_ip_data
+
+import ast, folium
 
 
 def main():
@@ -44,7 +44,7 @@ def main():
                 result = f"[No. {count}]\n\t - Server: {server}\n\t - Country: {ip_country} \n\t - Metadata: {ip}, {ip_asn}, {ip_org}\n\t - URL: {url}"
 
 
-               # SSL Certificate metadata retrieval
+                # SSL Certificate metadata retrieval
                 url_cert = get_ssl_cert(url)
                 if url_cert:
                     cert_subject_dict = dict(cert_data[0] for cert_data in url_cert['subject'])
@@ -80,6 +80,9 @@ def main():
                            ORG: {ip_org}
                            <br>
                            ISP: {ip_isp}
+                           <br>
+                           Tracker: {len(tracking_cookies) > 0}
+                           <br>
                        </p>
                    '''
 

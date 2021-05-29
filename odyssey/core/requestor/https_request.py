@@ -1,6 +1,6 @@
-import socket, ssl
+from odyssey.core.config.config_loader import SEGMENT_BUFFER
 
-from odyssey.core.utils.constants import SEGMENT_BUFFER
+import socket, ssl
 
 
 def https_response(param_socket, domain, port, request, timeout=5):
@@ -32,7 +32,7 @@ def https_response(param_socket, domain, port, request, timeout=5):
     while True:
         try:
             segment = ssl_socket.recv(SEGMENT_BUFFER)
-        except socket.timeout as error:
+        except socket.timeout:
             print("[HTTPS] Socket connection timed out when receiving response buffer")
             break
 

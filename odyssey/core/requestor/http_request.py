@@ -1,5 +1,7 @@
-from odyssey.core.utils.constants import SEGMENT_BUFFER
+from odyssey.core.config.config_loader import SEGMENT_BUFFER
+
 import socket
+
 
 def http_response(param_socket, domain, port, request, timeout=5):
     '''
@@ -28,7 +30,7 @@ def http_response(param_socket, domain, port, request, timeout=5):
     while True:
         try:
             segment = param_socket.recv(SEGMENT_BUFFER)
-        except socket.timeout as error:
+        except socket.timeout:
             print("[HTTP] Socket connection timed out when receiving response buffer")
             break
 

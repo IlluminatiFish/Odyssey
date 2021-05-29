@@ -1,0 +1,31 @@
+{
+   "USER_AGENT": "Mozilla/5.0",
+   "SEGMENT_BUFFER": 16384,
+   "TRACKING_COOKIES": [
+      "enc_aff_session_",
+      "ho_mob",
+      "cep-v4",
+      "uniqueCLICK_",
+      "click_id",
+      "voluum-cid-v4",
+      "trackingID",
+      "lt_tr",
+      "click",
+      "brwsr",
+      "hexa",
+      "trk",
+      "trackingid",
+      "geoip_country",
+      "LanguageCode",
+      "cc-v4",
+      "uclick",
+      "lng",
+      "flaglng"
+   ],
+   "CLEAR_COOKIES": [
+      "__cfduid",
+      "_bit",
+      "PHPSESSID",
+      "XSRF-TOKEN"
+   ]
+}

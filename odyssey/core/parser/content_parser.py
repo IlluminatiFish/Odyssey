@@ -1,10 +1,8 @@
-import re, execjs, socket
-from urllib.parse import urlparse
-
-from bs4 import BeautifulSoup
-
 from odyssey.core.utils.odyssey_utils import get_value, find_urls
 
+import re, execjs, socket
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
 
 def process_response(raw_content, url):
@@ -27,8 +25,6 @@ def process_response(raw_content, url):
 
     header_list = headers.splitlines()
 
-    http_status = int(header_list[:1][0].split(' ')[1])
-
     http_headers = header_list[1:]
 
     content_type = get_value('Content-Type', http_headers)
@@ -40,28 +36,29 @@ def process_response(raw_content, url):
     # Check for 'Refresh' headers from websites such as Instagram that redirect out of Instagram
     if get_value('Refresh', http_headers):
 
-        object = get_value('Refresh', http_headers)
-        if 'url=' in object.lower():
-            return object.lower().split('url=')[1]
+        refresh_header_object = get_value('Refresh', http_headers)
+        if 'url=' in refresh_header_object.lower():
+            return refresh_header_object.lower().split('url=')[1]
 
 
     if get_value('Location', http_headers):
-        object = urlparse(get_value('Location', http_headers)).netloc
+        location_header_object = urlparse(get_value('Location', http_headers)).netloc
 
         ip = None
         domain = None
 
-        object_match = re.match(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', object)
+        location_header_object_match = re.match(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', location_header_object)
 
-        if object_match != None:
-            ip = object
+        if location_header_object_match is not None:
+            ip = location_header_object
         else:
-            domain = object
+            domain = location_header_object
             domain_ip = None
+
             try:
                 domain_ip = str(socket.gethostbyname(domain))
-            except Exception as exc:
-                print('[-] An error occurred in the content parser:\n\n', exc)
+            except Exception as error:
+                print('[-] An error occurred in the content parser:\n\n', error)
 
         # Fixes a case where the next url was seen to be a local ip / resolved to a local ip in the location header of the previous url
         if ip != '127.0.0.1' and domain_ip != '127.0.0.1':

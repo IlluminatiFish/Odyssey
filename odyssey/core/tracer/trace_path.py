@@ -1,14 +1,15 @@
-import socket
-from urllib.parse import urlparse
-
+from odyssey.core.config.config_loader import USER_AGENT
 from odyssey.core.parser.content_parser import process_response
 from odyssey.core.requestor.http_request import http_response
 from odyssey.core.requestor.https_request import https_response
-from odyssey.core.utils.constants import USER_AGENT
 from odyssey.core.utils.get_cookies import get_cookies
 from odyssey.core.utils.get_server import get_server
 
-trace = {} # Trace URL redirect path
+import socket
+from urllib.parse import urlparse
+
+trace = {}  # Trace URL redirect path
+
 
 def do_trace(param_url):
     '''
@@ -48,8 +49,7 @@ def do_trace(param_url):
                 raw_path).fragment:  # If we have a fragement in the URL such as (https://bit.ly/37O7zEf#HJEDY_BRMFE_6PIHS) we should get rid of it
             path = path.split('#')[0]
 
-    request_message = "GET /{} HTTP/1.1\r\nHost: {}\r\nAccept: */*\r\nConnection: close\r\nUser-Agent: {}\r\n\r\n".format(
-        path, domain, USER_AGENT)
+    request_message = f"GET /{path} HTTP/1.1\r\nHost: {domain}\r\nAccept: */*\r\nConnection: close\r\nUser-Agent: {USER_AGENT}\r\n\r\n"
 
     response = None
 
@@ -61,17 +61,14 @@ def do_trace(param_url):
         port = 443
         response = https_response(request_socket, domain, port, request_message)
 
-
     if response:
 
         # Parse the response accordingly here
 
         next_url = process_response(response, param_url)
 
-
-
         trace[param_url] = socket.gethostbyname(domain) + '**' + get_server(response) + '**' + get_cookies(response,
-                                                                                                          True)
+                                                                                                           True)
         if next_url is not None:
             if param_url != next_url:  # Fixes endless redirect loops that are on the same URL
                 if next_url not in trace.keys():
