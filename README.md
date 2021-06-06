@@ -19,14 +19,13 @@
 </p>
   
 <p align="center">
-	<a href=""><img
-		alt="Python version"
-		src="https://img.shields.io/badge/Python-v3.0+-6ae8ff"></a>
-    <a href=""><img
-    	alt="Project version"
-        src="https://img.shields.io/badge/Current%20Version-v0.9-6ae8ff"></a>
-	<a href="#"><img alt="Codacy Grade" src="https://app.codacy.com/project/badge/Grade/06c8bdaa68414b7b84c096dbd47c0944"></a>
-</p>  
+	<img alt="Python version" src="https://img.shields.io/badge/Python-v3.0+-6ae8ff"> 
+  	<img alt="Project version" src="https://img.shields.io/badge/Current%20Version-v0.9-6ae8ff">
+  	<img alt="Codacy Grade" src="https://app.codacy.com/project/badge/Grade/06c8bdaa68414b7b84c096dbd47c0944"> 
+  	<img src="https://img.shields.io/github/languages/code-size/IlluminatiFish/Odyssey"> 
+  	<img src="https://img.shields.io/github/license/IlluminatiFish/Odyssey"> 
+  	<img src="https://img.shields.io/github/last-commit/IlluminatiFish/Odyssey">
+</p>
 
 <p align="center">
 	<img src="https://i.gyazo.com/b82c8b2e36a5ecefdc0a3251ff3176f0.png" width="550">
