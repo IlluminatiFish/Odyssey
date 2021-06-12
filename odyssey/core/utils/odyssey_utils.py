@@ -35,6 +35,7 @@ def get_value(key, request_data):
     except KeyError:
         return None
 
+
 def find_urls(data):
     '''
         Gets all the strings that match the regex pattern for URLs.
@@ -44,6 +45,6 @@ def find_urls(data):
         :returns: The list of strings that match the regex pattern in :param data:
     '''
 
-    regex = re.compile('http[s]?://(?:[\w]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', re.UNICODE)
+    regex = re.compile("http[s]?://(?:[\w]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", re.UNICODE)
     return regex.findall(data)
 

@@ -21,11 +21,12 @@ def get_cookies(raw_content, tracking):
     cookies = []
     trackers = []
 
-    for http_header in http_headers:
+    # fold any weird cases used in the header keys while retaining the correct case for the header value
+    cleaned_headers = [http_header.split(':')[0].casefold() + ':' + http_header.split(':')[1] for http_header in http_headers]
 
-        if str(http_header.title()).startswith('Set-Cookie: '):
-
-            cookie_value = str(http_header).split('Set-Cookie: ')[1]
+    for http_header in cleaned_headers:
+        if str(http_header).startswith('set-cookie: '):
+            cookie_value = str(http_header).split('set-cookie: ')[1]
 
             cookie_prefix = cookie_value.split('=')[0]
 
@@ -34,7 +35,6 @@ def get_cookies(raw_content, tracking):
 
             for tracking_cookie in TRACKING_COOKIES:
                 if cookie_value.startswith(tracking_cookie):
-                    print('[!] Tracking cookie detected\n\t- Cookie Value: {}'.format(cookie_value))
                     trackers.append(cookie_value)
 
             cookies.append(cookie_value)

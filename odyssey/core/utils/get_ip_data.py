@@ -7,21 +7,7 @@ def get_ip_data(ip):
 
         :param ip: The IP address you want to get data on.
 
-            Possibilities:
-                - country
-                - countryCode
-                - region
-                - regionName
-                - city
-                - zip
-                - lat
-                - lon
-                - timezone
-                - as
-                - isp
-                - org
-
-        :returns: The type of data about the IP you requested.
+        :returns: The JSON response of the API
     '''
 
     request = requests.get('http://ip-api.com/json/{}'.format(ip))

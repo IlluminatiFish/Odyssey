@@ -15,11 +15,7 @@ def process_response(raw_content, url):
         :returns: The next url in the redirect chain.
     '''
 
-
-
-
     # Very bad method, as it does not account for all other language characters, needs to be fixed in the future
-
 
     headers = raw_content.split(b'\r\n\r\n', 1)[0].decode()
 
@@ -29,30 +25,32 @@ def process_response(raw_content, url):
 
     content_type = get_value('Content-Type', http_headers)
 
-
-
     # Header-based redirect checks
 
     # Check for 'Refresh' headers from websites such as Instagram that redirect out of Instagram
     if get_value('Refresh', http_headers):
 
         refresh_header_object = get_value('Refresh', http_headers)
-        if 'url=' in refresh_header_object.lower():
-            return refresh_header_object.lower().split('url=')[1]
 
+        if 'url=' in refresh_header_object.lower():
+            # Fixes case sensitivity issues from the extracted url
+            regex_split = re.split('URL=', refresh_header_object, flags=re.IGNORECASE)
+            url = regex_split[1]
+
+            return url
 
     if get_value('Location', http_headers):
-        location_header_object = urlparse(get_value('Location', http_headers)).netloc
+        location_header_netloc = urlparse(get_value('Location', http_headers)).netloc
 
         ip = None
         domain = None
 
-        location_header_object_match = re.match(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', location_header_object)
+        location_header_object_match = re.match(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', location_header_netloc)
 
         if location_header_object_match is not None:
-            ip = location_header_object
+            ip = location_header_netloc
         else:
-            domain = location_header_object
+            domain = location_header_netloc
             domain_ip = None
 
             try:
@@ -65,18 +63,16 @@ def process_response(raw_content, url):
             return get_value('Location', http_headers)
 
 
-    # HTML-based redirect checks
 
-    if content_type.startswith('application'):
-        return None
+
+    # HTML-based redirect checks
+    if content_type: # check if content type even exists
+      if content_type.startswith('application'):
+          return None
 
     content = raw_content.decode('unicode-escape')
 
-
-
     dom_object = content.split('\r\n\r\n', 1)[1]
-
-
 
     soup = BeautifulSoup(dom_object, 'html.parser')
 
@@ -84,13 +80,15 @@ def process_response(raw_content, url):
     meta_tags = soup.find_all('meta')
     script_lines = soup.find_all('script')
 
-
     if len(meta_tags) > 0:
         urls = []
         for tag in meta_tags:
             if tag.get('content') and tag.get('http-equiv') and len(find_urls(tag.get('content'))) > 0:
-                url = str(tag.get('content')).lower().split('url=')[1].replace("'",
-                                                                               "")  # Quick patch to handle all cases of meta tag formats
+
+                # Fixes case sensitivity issues from the extracted url
+                regex_split = re.split('URL=', tag.get('content'), flags=re.IGNORECASE)
+                url = regex_split[1].replace("'", "")
+
                 urls.append(url)
 
         if len(urls) > 0:
@@ -147,7 +145,8 @@ def process_response(raw_content, url):
                 try:
                     return compiler.eval('')
                 except Exception:
-                    continue  # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
+                    # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
+                    continue
 
             # Regex pattern to get rid of any HTML tags, better than the old method used
             clean_script = re.sub('<.*?>', '', str(script_line))
@@ -177,8 +176,8 @@ def process_response(raw_content, url):
                 try:
                     return compiler.eval('')
                 except Exception:
-                    continue  # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
-
+                    # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
+                    continue
             continue
 
 
