@@ -56,7 +56,7 @@ To learn more about the uses of redirects, and what redirects are, please read [
 To have Odyssey work properly without any hiccups, please follow the instructions below.
 
 - Clone this repository
-- Then execute the command ``pip install requirements.txt``
+- Then execute the command ``pip install -r requirements.txt``
 
 # License
 
