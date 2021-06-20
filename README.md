@@ -20,7 +20,7 @@
   
 <p align="center">
 	<img alt="Python version" src="https://img.shields.io/badge/Python-v3.0+-6ae8ff"> 
-  	<img alt="Project version" src="https://img.shields.io/badge/Current%20Version-v1.0-6ae8ff">
+  	<img alt="Project version" src="https://img.shields.io/badge/Current%20Version-v1.1-6ae8ff">
   	<img alt="Codacy Grade" src="https://app.codacy.com/project/badge/Grade/06c8bdaa68414b7b84c096dbd47c0944"> 
   	<img src="https://img.shields.io/github/languages/code-size/IlluminatiFish/Odyssey"> 
   	<img src="https://img.shields.io/github/license/IlluminatiFish/Odyssey"> 
