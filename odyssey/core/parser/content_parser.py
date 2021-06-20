@@ -1,8 +1,10 @@
+from odyssey.core.requestor.requestor import make_request
 from odyssey.core.utils.odyssey_utils import get_value, find_urls
 
-import re, execjs, socket
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+
+import re, execjs, socket, magic
 
 
 def process_response(raw_content, url):
@@ -62,15 +64,55 @@ def process_response(raw_content, url):
         if ip != '127.0.0.1' and domain_ip != '127.0.0.1':
             return get_value('Location', http_headers)
 
-
-
-
     # HTML-based redirect checks
-    if content_type: # check if content type even exists
-      if content_type.startswith('application'):
-          return None
 
-    content = raw_content.decode('unicode-escape')
+    #
+    # I had a thought in when working on Odyssey and asked myself the following question:
+    #
+    # Q: Can we trust that the content type header of the response is true and valid for the data in the response body?
+    #
+    # A: No! We can't just blindly trust any server on the internet, therefore we employ a method to double check
+    #    that the mimetype set by the server in the content-type header is what it is being advertised as,
+    #    prevents weird edge cases that could've occurred here
+    #
+
+    # Reference: https://stackoverflow.com/a/43049834
+
+    # Raw content-type header could include parameters there we split at the first
+    # separator (semi-colon) we see to extract the mimetype of the content
+    content_mimetype = content_type.split(";")[0]
+
+    # Will probably rewrite this part later to use our own built-in methods to send requests to the URL to retrive the
+    # content at the URL
+
+    raw_response = make_request(url)
+    raw_response_body = raw_response.split(b'\r\n\r\n')[1]
+
+    magician = magic.Magic(mime=True)
+    true_mimetype = magician.from_buffer(raw_response_body)
+
+    # If the content types are not the same, trust the mimetype from the python-magic library instead of the server
+    if str(true_mimetype) != str(content_mimetype):
+        content_type = true_mimetype
+
+    # Grab all details if provided in the content-type header and parse them into a dictionary for easy access later on
+    raw_details = content_type.split(";")[1:]
+    details = [raw_detail.strip() for raw_detail in raw_details]
+
+    details_dict = {}
+    for detail in details:
+        parameter = detail.split("=")[0]
+        value = detail.split("=")[1]
+        details_dict[parameter] = value
+
+    # If content-type is not text/html then reject parsing it
+    if not content_type.startswith("text/html"):
+        return
+
+    # Uses the charset given in the content-type header if not found it uses cp437 encoding by default
+    decode_charset = details_dict.get('charset', 'cp437')
+
+    content = raw_content.decode(decode_charset)
 
     dom_object = content.split('\r\n\r\n', 1)[1]
 
@@ -80,11 +122,12 @@ def process_response(raw_content, url):
     meta_tags = soup.find_all('meta')
     script_lines = soup.find_all('script')
 
+    # Meta tag redirects
+
     if len(meta_tags) > 0:
         urls = []
         for tag in meta_tags:
             if tag.get('content') and tag.get('http-equiv') and len(find_urls(tag.get('content'))) > 0:
-
                 # Fixes case sensitivity issues from the extracted url
                 regex_split = re.split('URL=', tag.get('content'), flags=re.IGNORECASE)
                 url = regex_split[1].replace("'", "")
@@ -101,6 +144,8 @@ def process_response(raw_content, url):
                     break
                 else:
                     return url
+
+    # Inline Javascript redirects
 
     if len(script_lines) > 0:
 
@@ -179,5 +224,3 @@ def process_response(raw_content, url):
                     # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
                     continue
             continue
-
-

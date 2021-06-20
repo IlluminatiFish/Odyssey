@@ -1,5 +1,5 @@
 {
-   "USER_AGENT": "Odyssey/1.0",
+   "USER_AGENT": "Odyssey/1.1",
    "SEGMENT_BUFFER": 32768,
    "TRACKING_COOKIES": [
       "enc_aff_session_",
