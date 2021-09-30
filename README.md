@@ -55,7 +55,7 @@ To learn more about the uses of redirects, and what redirects are, please read [
 
 To have Odyssey work properly without any hiccups, please follow the instructions below.
 
-- Clone this repository
+- Clone this repository or download it from <a href="https://github.com/IlluminatiFish/Odyssey/releases">here</a>
 - Then execute the command ``pip install -r requirements.txt``
 
 # License
