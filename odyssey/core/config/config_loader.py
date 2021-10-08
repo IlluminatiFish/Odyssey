@@ -1,12 +1,15 @@
-import json, sys
+import json
+import sys
 
-software_directory = sys.path[1]
-odyssey_config = open(software_directory + '\\config.json')
 
-odyssey_config_json = json.load(odyssey_config)
+working_directory = sys.path[1]
+configuration_file_path = working_directory + '\\odyssey.json'
 
-# Load constants into software from configuration file
-USER_AGENT = odyssey_config_json['USER_AGENT']
-SEGMENT_BUFFER = odyssey_config_json['SEGMENT_BUFFER']
-TRACKING_COOKIES = odyssey_config_json['TRACKING_COOKIES']
-CLEAR_COOKIES = odyssey_config_json['CLEAR_COOKIES']
+odyssey_config = open(configuration_file_path)
+odyssey_config_json = dict(json.load(odyssey_config))
+
+USER_AGENT = odyssey_config_json.get('USER_AGENT', 'Mozilla/5.0')
+SEGMENT_BUFFER = odyssey_config_json.get('SEGMENT_BUFFER', 4096)
+TRACKING_COOKIES = odyssey_config_json.get('TRACKING_COOKIES', [])
+CLEAR_COOKIES = odyssey_config_json.get('CLEAR_COOKIES', [])
+DISPLAY_TRACKERS = odyssey_config_json.get('DISPLAY_TRACKERS', True)

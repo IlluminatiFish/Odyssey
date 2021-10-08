@@ -1,8 +1,9 @@
-from odyssey.core.tracer.trace_path import do_trace
-from odyssey.core.utils.get_certs import get_ssl_cert
-from odyssey.core.utils.get_ip_data import get_ip_data
+from odyssey.core.tracer.trace_route import do_trace
+from odyssey.core.utils.utils import get_ssl_cert
+from odyssey.core.utils.utils import get_ip_metadata
 
-import ast, folium
+import ast
+import folium
 
 
 def main():
@@ -25,20 +26,18 @@ def main():
 
 
             if url and trace_data:
-                data = trace_data.split('**') # Get rid of data delimeter
-                ip = data[0]
-                server = data[1]
-                tracking_cookies = ast.literal_eval(str(data[2])) # Convert our list of type string to a list type again
+                ip, server, raw_tracking_cookies = trace_data # Get rid of data delimeter
+                tracking_cookies = ast.literal_eval(str(raw_tracking_cookies)) # Convert our list of type string to a list type again
 
                 # Get all the IP's metadata we will need to use
-                ip_data = get_ip_data(ip)
-                ip_country = ip_data['country']
+                ip_data = get_ip_metadata(ip)
+                ip_country = ip_data.get('country', 'N/A')
 
-                ip_asn = ip_data['as']
-                ip_org = ip_data['org']
-                ip_isp = ip_data['isp']
-                ip_lat = ip_data['lat']
-                ip_lon = ip_data['lon']
+                ip_asn = ip_data.get('as', 'N/A')
+                ip_org = ip_data.get('org', 'N/A')
+                ip_isp = ip_data.get('isp', 'N/A')
+                ip_lat = ip_data.get('lat', -1)
+                ip_lon = ip_data.get('lon', -1)
 
 
                 result = f"[No. {count}]\n\t - Server: {server}\n\t - Country: {ip_country} \n\t - Metadata: {ip}, {ip_asn}, {ip_org}\n\t - URL: {url}"
@@ -103,15 +102,20 @@ def main():
                 END_DATA = (len(traced_path.keys()), 'red')
 
 
+
                 if count == START_DATA[0]:
+
                     folium.Marker((ip_lat, ip_lon), popup=popup,
                                   icon=folium.Icon(color=START_DATA[1], icon="glyphicon-flash", prefix="glyphicon")).add_to(
                         route_map)
+
                 elif count == END_DATA[0]:
+
                     folium.Marker((ip_lat, ip_lon), popup=popup,
                                   icon=folium.Icon(color=END_DATA[1], icon="glyphicon-flash", prefix="glyphicon")).add_to(
                         route_map)
                 else:
+
                     folium.Marker((ip_lat, ip_lon), popup=popup, icon=folium.Icon(color=BOUNCE_DATA[1], icon="glyphicon-flash",
                                                                             prefix="glyphicon")).add_to(route_map)
 
