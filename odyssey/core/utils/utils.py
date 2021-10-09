@@ -1,4 +1,4 @@
-from odyssey.core.config.config_loader import CLEAR_COOKIES, TRACKING_COOKIES
+from odyssey.core.config.config_loader import CLEAR_COOKIES, DISPLAY_TRACKERS, TRACKING_COOKIES
 
 from urllib.parse import urlparse
 
@@ -39,15 +39,14 @@ def find_urls(data):
     return pattern.findall(data)
 
 
-def get_cookies(raw_content, tracking):
+def get_cookies(raw_content):
     '''
         Gets all the cookies set by the web server given by the Set-Cookie headers in the response
 
-        :param raw_content: The raw content taken from the do_get(url) function.
-        :param tracking: A setting if you want only tracking cookies or all cookies from this function.
+        :param raw_content: The raw content taken from the do_trace(url) function.
 
-        :returns: A list of cookies depending on the :param tracking: setting, could be
-                  a list of tracking cookies or all cookies found.
+        :returns: A list of cookies depending on the DISPLAY_TRACKERS configuration setting, could be
+                  a list of tracking cookies (True) or all cookies found (False).
     '''
 
     headers = raw_content.split(b'\r\n\r\n', 1)[0].decode()
@@ -77,7 +76,7 @@ def get_cookies(raw_content, tracking):
 
             cookies.append(cookie_value)
 
-    if tracking:
+    if DISPLAY_TRACKERS:
         return str(trackers)
     else:
         return str(cookies)
