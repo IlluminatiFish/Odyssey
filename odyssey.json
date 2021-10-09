@@ -29,5 +29,5 @@
       "PHPSESSID",
       "XSRF-TOKEN"
    ],
-  "DISPLAY_COOKIES": "True"
+  "DISPLAY_TRACKERS": "True"
 }
