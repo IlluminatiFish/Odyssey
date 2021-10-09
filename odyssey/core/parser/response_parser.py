@@ -125,20 +125,13 @@ class ResponseParser:
 
         if len(meta_tags) > 0:
 
-
-            urls = []
             for meta_tag in meta_tags:
                 if meta_tag.get('content') and meta_tag.get('http-equiv') and len(find_urls(meta_tag.get('content'))) > 0:
 
                     parition = re.split('URL=', meta_tag.get('content'), flags=re.IGNORECASE)
                     url = parition[1].replace("'", "")
 
-                    urls.append(url)
-
-            if len(urls) > 0:
-                unique_urls = list(set(urls))
-                print(unique_urls)
-
+                    return url
 
         # Inline Javascript based redirects
         if len(script_tags) > 0:
@@ -218,15 +211,3 @@ class ResponseParser:
                         # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
                         continue
                 continue
-
-
-
-
-
-
-
-
-
-
-
-
