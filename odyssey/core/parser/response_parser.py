@@ -19,7 +19,6 @@ class ResponseParser:
 
         raw_headers = self.raw_response.split(b'\r\n\r\n', 1)[0].decode()
 
-
         header_list = raw_headers.splitlines()
 
         response_headers = header_list[1:]
@@ -35,14 +34,14 @@ class ResponseParser:
 
             if 'url=' in refresh_value.lower():
 
-                parition = re.split('URL=', refresh_value, flags=re.IGNORECASE)
-                url = parition[1]
+                partition = re.split('URL=', refresh_value, flags=re.IGNORECASE)
+                url = partition[1]
 
                 return url
 
         if location_value:
 
-            location_value_host = urlparse(location_value).netloc
+            location_value_host = str(urlparse(location_value).netloc).split(':')[0]
 
             ip = None
             domain_ip = None
@@ -54,9 +53,11 @@ class ResponseParser:
                 ip = location_value_host
             else: # Host in the location header is a domain
                 try:
+
                     domain_ip = str(socket.gethostbyname(location_value_host))
                 except Exception as error:
-                    print(f'[ERROR] (RESPONSE_PARSER) Could not resolve {location_value_host} to an IP')
+                    print(f'[ERROR] (RESPONSE_PARSER) Could not resolve {location_value_host} to an IP, while tracing {self.response_url}')
+                    return
 
             # Fixes cases where the location header gave/resolved to a non-routeable ip address
             if (ip and ip_address(ip).is_global) or (domain_ip and ip_address(domain_ip).is_global):
@@ -78,7 +79,6 @@ class ResponseParser:
         # Reference: https://stackoverflow.com/a/43049834
 
         magician = magic.Magic(mime=True)
-
 
         true_mimetype = magician.from_buffer(self.raw_response)
 
@@ -120,18 +120,37 @@ class ResponseParser:
         meta_tags = soup.find_all('meta')
         script_tags = soup.find_all('script')
 
-
         # Meta tag based redirects
 
         if len(meta_tags) > 0:
 
+            data = {}
             for meta_tag in meta_tags:
                 if meta_tag.get('content') and meta_tag.get('http-equiv') and len(find_urls(meta_tag.get('content'))) > 0:
 
-                    parition = re.split('URL=', meta_tag.get('content'), flags=re.IGNORECASE)
-                    url = parition[1].replace("'", "")
+                    partition = re.split('(?:\s)?URL(?:\s)?=(?:\s)?', meta_tag.get('content'), flags=re.IGNORECASE)
+                    url = partition[1].replace("'", "")
 
-                    return url
+                    # Time in seconds until a redirect occurs
+                    ttr = meta_tag.get('content').split(';')[0]
+
+                    data[url] = int(ttr)
+
+            flipped_data = {}
+
+            for key, value in data.items():
+                if value not in flipped_data:
+                    flipped_data[value] = [key]
+                else:
+                    flipped_data[value].append(key)
+
+            if not flipped_data:
+                return
+
+            lowest_refresh_rate = min(flipped_data, key=int)
+
+            return flipped_data.get(lowest_refresh_rate)[-1]
+
 
         # Inline Javascript based redirects
         if len(script_tags) > 0:
@@ -185,25 +204,38 @@ class ResponseParser:
 
                 if len(clean_script) > 0:
 
-                    script = ""
+                    if str(clean_script).startswith('document.location.href = '):
+                        clean_script = clean_script.replace('document.location.href = ', 'return ')
+
+                    if 'window.location.href = ' in str(clean_script) and str(clean_script).startswith('window.location.href = '):
+                        clean_script = clean_script.replace('window.location.href = ', 'return ')
+
 
                     if 'window.location.href=' in str(clean_script) and str(clean_script).startswith(
                             'window.location.href='):
-                        script += clean_script.replace('window.location.href=', 'return ')
+                        clean_script = clean_script.replace('window.location.href=', 'return ')
+
+                    if 'window.location.href' in str(clean_script):
+                        clean_script = clean_script.replace('window.location.href', f'"{self.response_url}"')
 
                     if 'window.location = ' in str(clean_script) and str(clean_script).startswith('window.location = '):
-                        script += clean_script.replace('window.location = ', 'return ')
+                        clean_script = clean_script.replace('window.location = ', 'return ')
 
                     if 'window.location.replace' in str(clean_script) and str(clean_script).startswith(
                             'window.location.replace'):
-                        script += clean_script.replace('window.location.replace', 'return ')
+                        clean_script = clean_script.replace('window.location.replace', 'return ')
 
                     if 'top.location.href=' in str(clean_script) and str(clean_script).startswith('top.location.href='):
-                        script += clean_script.replace('top.location.href=', 'return ')
+                        clean_script = clean_script.replace('top.location.href=', 'return ')
 
-                    script += ';'
 
-                    compiler = execjs.compile(script)
+
+
+                    clean_script += ';'
+
+
+
+                    compiler = execjs.compile(clean_script)
 
                     try:
                         return compiler.eval('')
@@ -211,3 +243,15 @@ class ResponseParser:
                         # Added a 'continue' statement to iterate over the rest of the scripts found marked by <script> tags
                         continue
                 continue
+
+
+
+
+
+
+
+
+
+
+
+

@@ -29,7 +29,7 @@ def make_request(url, timeout=5):
             domain = domain.split(":")[0]
 
             port_match = re.search("(http|https)://(.*)/(.*)", url)
-            port_in_url = int(port_match.group(2).split(":")[1])
+            port_in_url = int(port_match.group(2).split(":")[1].split('/')[0])
 
             if scheme_port != port_in_url:
                 conn_port = port_in_url

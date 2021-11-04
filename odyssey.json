@@ -1,5 +1,5 @@
 {
-   "USER_AGENT": "Odyssey/1.2",
+   "USER_AGENT": "Odyssey/1.3 (+https://github.com/IlluminatiFish/Odyssey)",
    "SEGMENT_BUFFER": 32768,
    "TRACKING_COOKIES": [
       "enc_aff_session_",
@@ -29,5 +29,32 @@
       "PHPSESSID",
       "XSRF-TOKEN"
    ],
-  "DISPLAY_TRACKERS": "True"
+   "DISPLAY_TRACKERS": "True",
+   "TRACEROUTE_MAP_FILENAME": "traceroute.html",
+   "IP_LOGGERS": [
+      {
+         "Grabify": [
+            {
+               "match": "DOMAIN",
+               "value": "grabify.link"
+            },
+            {
+               "match": "SSL_CERT_SUBJECT_DOMAIN",
+               "value": "bmwforum.co"
+            }
+         ],
+         "Linkify": [
+            {
+               "match": "DOMAIN_IP",
+               "value": "210.16.120.73"
+            }
+         ],
+         "IPLogger": [
+            {
+               "match": "SSL_CERT_SUBJECT_DOMAIN",
+               "value": "iplogger.com"
+            }
+         ]
+      }
+   ]
 }

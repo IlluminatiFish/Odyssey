@@ -26,6 +26,7 @@ class HeaderUtils:
         response_headers = {}
         for delimiter in self.data:
             if delimiter:
+
                 response_headers[delimiter.split(': ')[0].title()] = delimiter.split(': ')[1]
 
         return response_headers
@@ -45,7 +46,7 @@ def get_cookies(raw_content):
 
         :param raw_content: The raw content taken from the do_trace(url) function.
 
-        :returns: A list of cookies depending on the DISPLAY_TRACKERS configuration setting, could be
+        :returns: A list of cookies depending on the DISPLAY_TRACKER setting, could be
                   a list of tracking cookies (True) or all cookies found (False).
     '''
 
@@ -109,7 +110,7 @@ def get_ssl_cert(url):
 
         port_match = re.search("(http|https)://(.*)/(.*)", url)
 
-        port_in_url = int(port_match.group(2).split(':')[1])
+        port_in_url = int(port_match.group(2).split(":")[1].split('/')[0])
         scheme_port = SCHEMES.get(scheme)
 
         # If the port in the url does not match the port of the scheme, then set the port from the url to be the

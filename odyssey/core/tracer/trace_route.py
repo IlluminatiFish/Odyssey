@@ -21,13 +21,22 @@ def do_trace(param_url):
 
 
     scheme = str(urlparse(param_url).scheme)
-    domain = str(urlparse(param_url).netloc)
+    host = str(urlparse(param_url).netloc)
 
-    root_url = scheme + '://' + domain
+    # Get rid of the port from the host part of the URL
+    if ':' in host:
+        host = host.split(':')[0]
+
+    root_url = scheme + '://' + host
 
     raw_response = make_request(param_url)
 
+    if not raw_response:
+        print(f'[-] No response was received from {param_url}')
+        return
+
     raw_headers = raw_response.split(b'\r\n\r\n', 1)[0].decode()
+
     header_list = raw_headers.splitlines()
 
     response_headers = header_list[1:]
@@ -36,7 +45,15 @@ def do_trace(param_url):
 
         header_utils = HeaderUtils(response_headers)
 
-        trace[param_url] = (socket.gethostbyname(domain), header_utils.get_value('Server'), get_cookies(raw_response, True))
+        ip = None
+
+        try:
+            ip = socket.gethostbyname(host)
+        except socket.error as error:
+            print(f'[-] Could not resolve {host} to an IP, while tracing {param_url}')
+            return
+
+        trace[param_url] = (ip, header_utils.get_value('Server'), get_cookies(raw_response))
 
         # Parse the response accordingly here
         parser = ResponseParser(raw_response, param_url)
