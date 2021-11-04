@@ -32,7 +32,7 @@
 	<img src="https://i.ibb.co/58bSWTb/gfghgh.png" width="550">
 </p>
 
-# Use Cases
+# 🚩 Use Cases
 
 - To see where an affiliate link ends up 
 - To see what affiliate network is being used in this process
@@ -46,19 +46,19 @@
 To learn more about the uses of redirects, and what redirects are, please read [this article](https://en.ryte.com/wiki/Redirect).
 
 
-# Requirements
+# ✨ Requirements
 
 - A python installation above 3.0+, which you can download from the official python website <a href="http://www.python.org/download/">here</a>.
 
 
-# Installation 
+# ➡️ Installation 
 
 To have Odyssey work properly without any hiccups, please follow the instructions below.
 
 - Clone this repository or download it from <a href="https://github.com/IlluminatiFish/Odyssey/releases">here</a>
 - Then execute the command ``pip install -r requirements.txt``
 
-# License
+# 📝 License
 
 Odyssey - A piece of software that shows a traceroute of a URL redirect path Copyright (c) 2021 IlluminatiFish
 
