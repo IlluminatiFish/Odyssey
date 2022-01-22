@@ -60,7 +60,7 @@ To have Odyssey work properly without any hiccups, please follow the instruction
 
 # 📝 License
 
-Odyssey - A piece of software that shows a traceroute of a URL redirect path Copyright (c) 2021 IlluminatiFish
+Odyssey - A piece of software that shows a traceroute of a URL redirect path Copyright (c) 2021-2022 IlluminatiFish
 
 This program is free software; you can redistribute it and/or modify the code base under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
