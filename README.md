@@ -12,8 +12,6 @@
 
 <p align="center">
 	<strong>
-		<a href="https://github.com/IlluminatiFish/Odyssey/blob/main/README.md#how-to-use">Usage</a>
-		•
 		<a href="https://github.com/IlluminatiFish/Odyssey/releases">Download</a>
 	</strong>
 </p>
