@@ -1,35 +1,6 @@
 {
-   "USER_AGENT": "Odyssey/1.3 (+https://github.com/IlluminatiFish/Odyssey)",
+   "USER_AGENT": "Odyssey/2.0 (+https://github.com/IlluminatiFish/Odyssey)",
    "SEGMENT_BUFFER": 32768,
-   "TRACKING_COOKIES": [
-      "enc_aff_session_",
-      "ho_mob",
-      "cep-v4",
-      "uniqueClick_",
-      "click_id",
-      "voluum-cid-v4",
-      "trackingID",
-      "lt_tr",
-      "click",
-      "brwsr",
-      "hexa",
-      "trk",
-      "trackingid",
-      "geoip_country",
-      "LanguageCode",
-      "cc-v4",
-      "uclick",
-      "lng",
-      "flaglng",
-      "attrk"
-   ],
-   "CLEAR_COOKIES": [
-      "__cfduid",
-      "_bit",
-      "PHPSESSID",
-      "XSRF-TOKEN"
-   ],
-   "DISPLAY_TRACKERS": "True",
    "TRACEROUTE_MAP_FILENAME": "traceroute.html",
    "IP_LOGGERS": [
       {
@@ -53,6 +24,18 @@
             {
                "match": "SSL_CERT_SUBJECT_DOMAIN",
                "value": "iplogger.com"
+            }
+         ],
+         "PS3CFW": [
+            {
+               "match": "DOMAIN",
+               "value": "www.ps3cfw.com"
+            }
+         ],
+         "GrabifyICU": [
+            {
+               "match": "SSL_CERT_SERIAL_NUMBER",
+               "value": "0C06B7A113CC1E69B370D5F75819E4C9"
             }
          ]
       }

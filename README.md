@@ -9,16 +9,10 @@
 <h3 align="center">
 	Tracing URL redirects has never been easier!
 </h3>
-
-<p align="center">
-	<strong>
-		<a href="https://github.com/IlluminatiFish/Odyssey/releases">Download</a>
-	</strong>
-</p>
   
 <p align="center">
-	<img alt="Python version" src="https://img.shields.io/badge/Python-v3.0+-6ae8ff"> 
-  	<img alt="Project version" src="https://img.shields.io/badge/Current%20Version-v1.3-6ae8ff">
+	<img alt="Python version" src="https://img.shields.io/badge/Python-v3.8+-6ae8ff"> 
+  	<img alt="Project version" src="https://img.shields.io/badge/Current%20Version-v2.0-6ae8ff">
   	<img alt="Codacy Grade" src="https://app.codacy.com/project/badge/Grade/06c8bdaa68414b7b84c096dbd47c0944"> 
   	<img src="https://img.shields.io/github/languages/code-size/IlluminatiFish/Odyssey"> 
   	<img src="https://img.shields.io/github/license/IlluminatiFish/Odyssey"> 
@@ -39,21 +33,20 @@
 - To avoid being tracked by companies
 - To avoid being redirected to malicious websites
 - Discover how many times a site can redirect your request
-- Check if URL shortening services such as bitly and adfly redirect to legitimate websites
 
 To learn more about the uses of redirects, and what redirects are, please read [this article](https://en.ryte.com/wiki/Redirect).
 
 
 # ✨ Requirements
 
-- A python installation above 3.0+, which you can download from the official python website <a href="http://www.python.org/download/">here</a>.
+- A python installation above 3.8+, which you can download from the official python website <a href="http://www.python.org/download/">here</a>.
 
 
 # ➡️ Installation 
 
-To have Odyssey work properly without any hiccups, please follow the instructions below.
+Please follow the instructions below.
 
-- Clone this repository or download it from <a href="https://github.com/IlluminatiFish/Odyssey/releases">here</a>
+- Clone this repository
 - Then execute the command ``pip install -r requirements.txt``
 
 # 📝 License
