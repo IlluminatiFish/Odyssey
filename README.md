@@ -49,6 +49,14 @@ Please follow the instructions below.
 - Clone this repository
 - Then execute the command ``pip install -r requirements.txt``
 
+# 🎖️ Usage 
+
+Simply run the entrypoint script called `run.py` with an appropriate python command and then enter the URL you would like to trace.
+```bash
+> python run.py
+[+] URL: https://example.com/test
+```
+
 # 📝 License
 
 Odyssey - A piece of software that shows a traceroute of a URL redirect path Copyright (c) 2021-2022 IlluminatiFish
