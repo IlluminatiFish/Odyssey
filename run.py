@@ -11,6 +11,15 @@ def main():
 
     url = input('[+] URL: ')
 
+    # Sanity input checks, fixes #1
+    if not url:
+        raise Exception(f'Please enter a URL to trace')
+    
+    parsed_url = furl(url)
+
+    if not (parsed_url.scheme or parsed_url.host) or '.' not in parsed_url.host:
+        raise Exception(f'Expected a URL but got something else!')
+
     traceroute = Odyssey().check(url)
 
     if traceroute == {} or not traceroute:
@@ -28,7 +37,6 @@ def main():
         cookies = metadata.get('cookies')
         ip = metadata.get('ip')
 
-        parsed_url = furl(url)
         domain = parsed_url.host
 
         country, isp, org, asn, latitude, longitude = get_ip_address_information(ip)
