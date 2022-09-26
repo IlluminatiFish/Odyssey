@@ -57,9 +57,9 @@ def match_ip_logger(
                         {"SSL_SERIAL_NUMBER": serial_number == matcher_value}
                     )
 
-				# Supplied matcher type is not supported
-				if matcher_type not in match_results.keys():
-					return None
+                # Supplied matcher type is not supported
+                if matcher_type not in match_results.keys():
+			return None
 
                 matches = list(filter(match_results.get, match_results))
 
