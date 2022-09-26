@@ -57,6 +57,10 @@ def match_ip_logger(
                         {"SSL_SERIAL_NUMBER": serial_number == matcher_value}
                     )
 
+				# Supplied matcher type is not supported
+				if matcher_type not in match_results.keys():
+					return None
+
                 matches = list(filter(match_results.get, match_results))
 
                 if len(matches) == 0:
@@ -120,10 +124,6 @@ def get_ssl_cert_from_url(url) -> Union[Dict[str, Dict[str, str]], None]:
 
     ssl_certificate = None
 
-    IPV4_REGEX = re.compile(
-        "^(([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
-    )
-
     host = furl(url).host
     port = furl(url).port
 
@@ -155,10 +155,12 @@ def get_ssl_cert_from_url(url) -> Union[Dict[str, Dict[str, str]], None]:
             parsed_ssl_certificate[key] = value
 
         else:
-            for index, element in enumerate(value):
-
+            for element in value:
+			
                 if isinstance(element, tuple):
+				
                     parsed_ssl_certificate[key] = element
+					
                     if isinstance(element[0], tuple):
                         sub_element = element[0]
                         sub_key, sub_value = sub_element
@@ -166,6 +168,7 @@ def get_ssl_cert_from_url(url) -> Union[Dict[str, Dict[str, str]], None]:
                     else:
                         sub_key, sub_value = element
                         element_dictionary[sub_key] = sub_value
+						
                 else:
                     used_keys.append(key)
                     parsed_ssl_certificate[key] = element

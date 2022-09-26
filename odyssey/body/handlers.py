@@ -1,4 +1,5 @@
 import re
+import bs4
 
 from typing import Dict, List, Union
 
@@ -7,14 +8,14 @@ from collections import defaultdict
 
 class BodyHandlers:
     @staticmethod
-    def _handle_meta_tag(tag) -> Union[Dict[float, List[str]], None]:
+    def _handle_meta_tag(tag: bs4.element.Tag) -> Union[Dict[float, List[str]], None]:
         """
-        Parse all meta HTML tags that have
+        Parse all meta HTML tag that have
         http-equiv set to 'Refresh'.
 
         Args:
             tag (bs4.element.Tag):
-                Raw HTML meta tag.
+                A BeautifulSoup4 Tag object.
 
         Returns:
             If None is returned, no redirects were identified.
@@ -38,7 +39,7 @@ class BodyHandlers:
         if not meta_refresh:
             return
 
-        for index, metadata in enumerate(meta_refresh.groups()[0].split(" ")):
+        for metadata in meta_refresh.groups()[0].split(" "):
             key, value = metadata.split("=", 1)
             meta_tag_dict[key] = value
 
@@ -61,7 +62,18 @@ class BodyHandlers:
 
         return meta_refresh_dict
 
-    def handle_meta_tags(self, tags):
+    def handle_meta_tags(self, tags: List[bs4.element.Tag]) -> str:
+        """
+        Parse all meta HTML tags that have
+        http-equiv set to 'Refresh'.
+
+        Args:
+            tags (List[bs4.element.Tag]):
+                A BeautifulSoup4 Tag object.
+
+        Returns:
+            The next URI in the redirect chain as a string
+        """
 
         # Reference: https://en.wikipedia.org/wiki/Meta_refresh
         meta_refreshes = []
@@ -72,8 +84,8 @@ class BodyHandlers:
             meta_refresh_dict = self._handle_meta_tag(tag)
             meta_refreshes.append(meta_refresh_dict)
 
-        for dict in meta_refreshes:
-            for key, value in dict.items():
+        for meta_refresh in meta_refreshes:
+            for key, value in meta_refresh.items():
 
                 if meta_refreshes_dict.get(key):
                     meta_refreshes_dict[key].extend(value)

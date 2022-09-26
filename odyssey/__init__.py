@@ -74,7 +74,7 @@ class Odyssey:
         # Local redirect to another path on the same web server
         if redirect_uri.startswith("/"):
 
-            # Identify the last root URL (url that ends with / or no path) in the redirect chain
+            # Identify the last root URL in the redirect chain
             root_urls = [
                 f"{furl(url).scheme}://{furl(url).host}"
                 for url in list(self._visited_urls.keys())[::-1]
@@ -82,7 +82,7 @@ class Odyssey:
 
             last_root_url = root_urls[0]
 
-            redirect_uri = last_root_url.rstrip("/") + redirect_uri
+            redirect_uri = last_root_url + redirect_uri
 
         # Scan the next URL in the chain
         self.check(redirect_uri, timeout)
@@ -168,7 +168,7 @@ class Odyssey:
         Identifies redirects in a given request's Location & Refresh headers.
 
         Args:
-            headers (Mapping[str, List[str]):
+            headers (Dict[str, List[str]):
                 A dictionary mapping header keys to the corresponding header values
 
         Returns:
@@ -194,7 +194,18 @@ class Odyssey:
         return redirect_uri
 
     @staticmethod
-    def _find_body_redirect(body: str) -> str:
+    def _find_body_redirect(body: str) -> Union[str, None]:
+        """
+        Identifies redirects in a given response body.
+
+        Args:
+            body (str):
+                A string representation of the response body.
+
+        Returns:
+            Could return a string or None. If None is returned, no redirect URI was identified.
+            Otherwise, a string should be returned which is pointed to the next URI in the redirect chain.
+        """
 
         redirect_uri = None
 

@@ -53,7 +53,7 @@ class HeaderHandlers:
                     host_ip_address = str(
                         socket.gethostbyname(parsed_location_header_host)
                     )
-                except socket.gaierror as exception:
+                except socket.gaierror as _:
                     Logger().message(
                         LoggerType.ERROR,
                         __file__,
