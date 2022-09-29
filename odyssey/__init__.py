@@ -115,7 +115,7 @@ class Odyssey:
 
         request = Request(url, timeout)
 
-        raw_response = request.execute()
+        raw_response, extension = request.execute()
 
         # If no response was received from the request
         if not raw_response:
@@ -150,11 +150,19 @@ class Odyssey:
             # identified, it defaults the charset to cp437.
             content_charset = metadata_dictionary.get("charset", "cp437")
 
-            response_body = parsed_body.decode(content_charset)
+            try:
+                response_body = parsed_body.decode(content_charset)
+            except UnicodeDecodeError:
+                # Default to decoding using the cp437 charset, if the advertised
+                # charset is able to decode the response body
+                response_body = parsed_body.decode("cp437")
 
             # Only parse response bodies that start and end with the magic html tags
             if response_body.startswith("<html>") and response_body.endswith("</html>"):
                 redirect_uri = self._find_body_redirect(response_body)
+
+        if redirect_uri:
+            redirect_uri = redirect_uri + extension
 
         return (
             redirect_uri,

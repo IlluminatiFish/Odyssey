@@ -4,9 +4,9 @@ from enum import Enum
 class LoggerType(Enum):
     """Enum to store all possible message logging types."""
 
-    NONE = ("NONE",)
-    INFO = ("INFO",)
-    WARNING = ("WARNING",)
+    NONE = "NONE"
+    INFO = "INFO"
+    WARNING = "WARNING"
     ERROR = "ERROR"
 
 

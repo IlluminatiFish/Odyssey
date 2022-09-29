@@ -1,7 +1,7 @@
 import socket
 import ssl
 
-from typing import Union
+from typing import Tuple, Union
 
 from furl import furl
 
@@ -23,7 +23,7 @@ class Request:
         self.url = url
         self.timeout = timeout
 
-    def execute(self) -> Union[bytes, None]:
+    def execute(self) -> Tuple[Union[bytes, None], str]:
         """
         Sends a HTTP GET request to the URL parsed in the constructor.
 
@@ -44,13 +44,15 @@ class Request:
         port = int(parsed_url.port)
         path = str(parsed_url.path)
 
+        extension = ""
+
         # Append query to path
         if parsed_url.query:
             path += "?" + str(parsed_url.query)
 
-        # Append fragment to path
+        # Append fragment to extension
         if parsed_url.fragment:
-            path += "#" + str(parsed_url.fragment)
+            extension += "#" + str(parsed_url.fragment)
 
         IS_HTTPS = scheme == "https"
 
@@ -103,4 +105,4 @@ class Request:
 
         REQUEST_SOCKET.close()
 
-        return raw_response if raw_response != b"" else None
+        return raw_response if raw_response != b"" else None, extension

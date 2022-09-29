@@ -13,7 +13,7 @@ from odyssey.logger import Logger, LoggerType
 
 
 def match_ip_logger(
-    *data: Tuple[str, str, Union[str, None], Union[str, None]], is_https: bool
+        *data: Tuple[str, str, Union[str, None], Union[str, None]], is_https: bool
 ) -> Union[str, None]:
     """
     Detects IP loggers in the redirect chain,
@@ -59,7 +59,7 @@ def match_ip_logger(
 
                 # Supplied matcher type is not supported
                 if matcher_type not in match_results.keys():
-			return None
+                    return None
 
                 matches = list(filter(match_results.get, match_results))
 
@@ -132,7 +132,7 @@ def get_ssl_cert_from_url(url) -> Union[Dict[str, Dict[str, str]], None]:
     context.load_default_certs()
 
     TCP_SOCKET = socket.socket()
-    SSL_SOCKET = context.wrap_socket(TCP_SOCKET, server_hostname=host)
+    SSL_SOCKET = context.wrap_socket(TCP_SOCKET, server_hostname = host)
 
     try:
         SSL_SOCKET.connect((host, port))
@@ -156,19 +156,17 @@ def get_ssl_cert_from_url(url) -> Union[Dict[str, Dict[str, str]], None]:
 
         else:
             for element in value:
-			
                 if isinstance(element, tuple):
-				
                     parsed_ssl_certificate[key] = element
-					
+
                     if isinstance(element[0], tuple):
                         sub_element = element[0]
                         sub_key, sub_value = sub_element
                         element_dictionary[sub_key] = sub_value
+
                     else:
                         sub_key, sub_value = element
                         element_dictionary[sub_key] = sub_value
-						
                 else:
                     used_keys.append(key)
                     parsed_ssl_certificate[key] = element
@@ -194,7 +192,6 @@ def get_ip_from_url(url):
 
 
 def parse_cookies(cookies: List[str]) -> Dict[str, Dict[str, Dict[str, str]]]:
-
     cookies_dictionary = {}
     for raw_cookie in cookies:
 
@@ -202,7 +199,7 @@ def parse_cookies(cookies: List[str]) -> Dict[str, Dict[str, Dict[str, str]]]:
 
         cookie = cookie_segments[0]
 
-        cookie_key, cookie_value = cookie.split("=")
+        cookie_key, cookie_value = cookie.split("=", 1)
 
         # Anything after the first index are cookie attributes
         cookie_attributes = cookie_segments[1:]
@@ -217,7 +214,7 @@ def parse_cookies(cookies: List[str]) -> Dict[str, Dict[str, Dict[str, str]]]:
                 # If a cookie attribute is not the form
                 # key=value, default to setting the attribute
                 # to an empty string.
-                cookie_attributes_dictionary[cookie_attribute.lower()] = ""
+                cookie_attributes_dictionary[cookie_attribute.lower()] = None
 
         cookies_dictionary[cookie_key] = {
             "value": cookie_value,
