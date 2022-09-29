@@ -8,16 +8,15 @@ from odyssey.utils import (get_ip_address_information, get_ssl_cert_from_url,
 
 
 def main():
-
     url = input('[+] URL: ')
 
     # Sanity input checks, fixes #1
     if not url:
         raise Exception(f'Please enter a URL to trace')
-    
-    parsed_url = furl(url)
 
-    if not (parsed_url.scheme or parsed_url.host) or '.' not in parsed_url.host:
+    original_parsed_url = furl(url)
+
+    if not (original_parsed_url.scheme or original_parsed_url.host) or '.' not in original_parsed_url.host:
         raise Exception(f'Expected a URL but got something else!')
 
     traceroute = Odyssey().check(url)
@@ -27,11 +26,13 @@ def main():
         return
 
     MAP_CENTER = [0, 0]
-    route_map = folium.Map(location=MAP_CENTER, zoom_start=2.5)
+    route_map = folium.Map(location = MAP_CENTER, zoom_start = 2.5)
     TRACEROUTE_MAP_FILENAME = 'route.html'
     locations = []
 
     for hop_count, (url, metadata) in enumerate(traceroute.items(), start = 1):
+
+        parsed_url = furl(url)
 
         server = metadata.get('server')
         cookies = metadata.get('cookies')
@@ -54,7 +55,6 @@ def main():
                           f'- Cookie Values:'
 
                 for cookie_name, cookie_data in cookies.items():
-
                     cookie_value = cookie_data.get('value')
                     cookie_attributes = cookie_data.get('attributes')
 
@@ -63,7 +63,7 @@ def main():
                     result += f'\n\t\t\t\t - Attributes: {cookie_attributes}'
 
         IS_HTTPS = parsed_url.scheme == 'https'
-        
+
         if IS_HTTPS:
 
             certificate = get_ssl_cert_from_url(url)
