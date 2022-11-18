@@ -1,8 +1,3 @@
-import re
-import requests
-import socket
-import ssl
-
 from typing import Dict, List, Tuple, Union
 
 from collections import defaultdict
@@ -11,6 +6,9 @@ from furl import furl
 from odyssey.config.loader import IP_LOGGERS
 from odyssey.logger import Logger, LoggerType
 
+import requests
+import socket
+import ssl
 
 def match_ip_logger(
         *data: Tuple[str, str, Union[str, None], Union[str, None]], is_https: bool

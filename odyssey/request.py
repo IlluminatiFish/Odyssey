@@ -1,12 +1,12 @@
-import socket
-import ssl
-
 from typing import Tuple, Union
 
 from furl import furl
 
 from odyssey.config.loader import SEGMENT_BUFFER, USER_AGENT
 from odyssey.logger import Logger, LoggerType
+
+import socket
+import ssl
 
 
 class Request:
@@ -42,7 +42,7 @@ class Request:
         scheme = str(parsed_url.scheme)
         domain = str(parsed_url.host)
         port = int(parsed_url.port)
-        path = str(parsed_url.path)
+        path = str(parsed_url.path) if str(parsed_url.path) else '/'
 
         extension = ""
 

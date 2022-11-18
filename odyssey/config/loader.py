@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import json
 import os
-from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent.parent.parent
 CONFIG_PATH = os.path.join(ROOT_DIR, "odyssey.json")

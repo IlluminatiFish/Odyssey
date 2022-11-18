@@ -1,13 +1,13 @@
-import ipaddress
-import re
-import socket
-
 from typing import Dict, List, Union
 
 from collections import defaultdict
 from furl import furl
 
 from odyssey.logger import Logger, LoggerType
+
+import ipaddress
+import re
+import socket
 
 
 class HeaderHandlers:

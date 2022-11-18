@@ -158,7 +158,7 @@ class Odyssey:
                 response_body = parsed_body.decode("cp437")
 
             # Only parse response bodies that start and end with the magic html tags
-            if response_body.startswith("<html>") and response_body.endswith("</html>"):
+            if "<html" in response_body and response_body.endswith("</html>"):
                 redirect_uri = self._find_body_redirect(response_body)
 
         if redirect_uri:
@@ -223,5 +223,23 @@ class Odyssey:
 
         if len(meta_tags) > 0:
             redirect_uri = BodyHandlers().handle_meta_tags(tags=meta_tags)
+
+        inline_scripts = soup.find_all("script")
+        if len(inline_scripts) > 0:
+
+            for inline_script in inline_scripts:
+
+                script_content_type = inline_script.get('type')
+
+                # True executable JavaScript code should be in script tags
+                # that either have the content type explicitly defined as
+                # text/javascript or have no content type set.
+                if script_content_type in ('text/javascript', None):
+
+                    script_contents = inline_script.contents
+
+                    if len(script_contents) != 0:
+                        script = ''.join(script_contents)
+                        redirect_uri = BodyHandlers.handle_javascript(script)
 
         return redirect_uri
