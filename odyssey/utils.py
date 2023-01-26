@@ -110,14 +110,12 @@ def get_ssl_cert_from_url(url) -> Union[Dict[str, Dict[str, str]], None]:
             A URL.
 
     Returns:
-        A tuple containing information about the IP
-        address, such as:
-            - Country
-            - ISP
-            - Organization
-            - ASN
-            - Latitude
-            - Longitude
+        A one level nested dictionary with the parsed certificate
+        data 
+        
+        None, will only be returned if the peer's certificate cannot
+        be retrived after connecting the host & port via the SSL 
+        socket.
     """
 
     ssl_certificate = None
